@@ -6,8 +6,16 @@ Prevent heap pollution by using generics with specific types for account collect
 
 Avoid using public static nonfinal fields, ensuring that account information is not globally accessible or modifiable (OBJ10-J). 
  */
+
+ /*
+  * OBJ01-J. Limit accessibility of fields
+    OBJ02-J. Preserve dependencies in subclasses when changing superclasses
+    OBJ03-J. Prevent heap pollution
+    OBJ10-J. Do not use public static nonfinal fields
+  */
 public class BankAccount {
     private String accountHolder;
+    
     private double balance;
 
     public double getBalance()
