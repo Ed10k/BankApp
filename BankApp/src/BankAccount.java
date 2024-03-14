@@ -30,8 +30,6 @@ public interface BankAccount {
      * method that deactivates account when user wishes to close
      * @param - none
      * @return - boolean: indicates success of operation
-     * precondition: an account must exist
-     * postcondition: account is deactivated
      */
     public boolean closeAccount();
 
@@ -39,8 +37,6 @@ public interface BankAccount {
      * method that withdrawals a certain amount from the bank account
      * @param - double amount: the amount the user wishes to withdrawal
      * @return - boolean: indicates success of operation. False indicates negative balance or negative widrawal amount
-     * precondition: an account must exist
-     * postcondition: balance is subtracted by the amount entered
      */
     public boolean withdraw(double amount);
 
@@ -48,8 +44,6 @@ public interface BankAccount {
      * method that deposits a certain amount to the bank account
      * @param - double amount: the amount the user wishes to deposit
      * @return - boolean: indicates success of operation. False indicates negative balance or negative deposit amount
-     * precondition: an account must exist
-     * postcondition: amount entered is added to balance
      */
     public boolean deposit(double amount);
 
@@ -57,10 +51,49 @@ public interface BankAccount {
      * method that checks the balance of the account
      * @param - none:
      * @return - double: the balance on the account
-     * precondition: an account must exist
-     * postcondition: balance is returned
      */
     public double checkBalance();
+
+    /*
+     * method that returns the current name of the account holder
+     * @param - none:
+     * @return - String: the name of the account holder
+     */
+    public String getAccountHolder();
+
+    /*
+     * method that sets the current name of the account holder
+     * @param - String newAccountHolder: the new account holder's name to be set
+     * @return - void
+     */
+    public void setAccountHolder(String newAccountHolder);
+
+    /*
+     * method that returns the current account number.
+     * There is no 'set' method as the account number cannot be changed upon object creation.
+     * 
+     * @param - none:
+     * @return - int: the account number
+     */
+    public int getAccountNumber();
+
+    /*
+     * method that returns the current routing number.
+     * There is no 'set' method as the routing number cannot be changed upon object creation.
+     * 
+     * @param - none:
+     * @return - int: the routing number
+     */
+    public int getRoutingNumber();
+
+    /*
+     * method that returns the current interest rate of the bank account.
+     * There is no 'set' method as the interest rate cannot be changed upon object creation.
+     * 
+     * @param - none:
+     * @return - double: the interest rate
+     */
+    public double getInterestRate();
     
 }
 

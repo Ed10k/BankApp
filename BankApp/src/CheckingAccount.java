@@ -1,10 +1,16 @@
 import java.util.Random;
-
+/*
+ * This class is an implementation of a checking account.
+ * It implements the BankAccount interface
+ */
 public class CheckingAccount implements BankAccount{
+    //private, class level variables
     private final int routingNumber = 8675309;
+    private final double interestRate = 0.1;
     private int accountNumber;
     private double balance;
     private String accountHolder;
+    private boolean accountOpen = false;
 
     public boolean openAccount(String accountHolderName){
         if(accountHolderName == null)
@@ -14,42 +20,71 @@ public class CheckingAccount implements BankAccount{
         balance = 0.0;
         accountHolder = accountHolderName;
         accountNumber = generateAccountNumber(accountHolderName);
-        System.out.println(String.valueOf(accountNumber));
+        accountOpen = true;
+
         return true;
     }
 
     public boolean closeAccount(){
-        return true;
+        if(accountOpen)
+        {
+            accountOpen = false;
+            return true;
+        }
+        if(balance < 0)
+        {
+            return false;
+        }
+        return false;
     }
 
     public boolean withdraw(double amount){
-        if(amount < 0)
+        if(accountOpen)
         {
+            if(amount < 0)
+            {
+                return false;
+            }
+
+            balance -= amount;
+            if(balance >= 0)
+            {
+                return true;
+            }
             return false;
         }
-
-        balance -= amount;
-        if(balance >= 0)
-        {
-            return true;
-        }
         return false;
+        
     }
 
     public boolean deposit(double amount){
-        if(amount < 0)
+        if(accountOpen)
         {
+            if(amount < 0)
+            {
+                return false;
+            }
+            
+            balance += amount;
+            if(balance >= 0)
+            {
+                return true;
+            }
             return false;
-        }
-        
-        balance += amount;
-        if(balance >= 0)
-        {
-            return true;
         }
         return false;
     }
-
+    
+    /*
+     * This method is a private helper method for generating a random account number. It instantiates a random integer.
+     * The accountHolderName is looped through. The characters are converted into ints and added together. This sum
+     * is added to a random integer and the result is the account number.
+     * 
+     * This method is not in the interface as interfaces cannot have private methods.
+     * 
+     * @param - String accountHolderName: the current name of the account holder used for determining account number
+     * @return - int: the resulting account number
+     */
     private int generateAccountNumber(String accountHolderName)
     {   
         int newAccountNumber = 0;
@@ -63,7 +98,8 @@ public class CheckingAccount implements BankAccount{
         return newAccountNumber;
     }
 
-    public double checkBalance(){
+    public double checkBalance()
+    {
         return balance;
     }
 
@@ -85,5 +121,10 @@ public class CheckingAccount implements BankAccount{
     public int getRoutingNumber()
     {
         return routingNumber;
+    }
+
+    public double getInterestRate()
+    {
+        return interestRate;
     }
 }
