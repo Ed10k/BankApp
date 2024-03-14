@@ -1,26 +1,75 @@
 import java.util.Random;
+import java.math.BigDecimal;
 /*
  * This class is an implementation of a checking account.
  * It implements the BankAccount interface
  */
 public class CheckingAccount implements BankAccount{
-    //private, class level variables
-    private final int routingNumber = 8675309;
-    private final double interestRate = 0.1;
-    private int accountNumber;
-    private double balance;
-    private String accountHolder;
-    private boolean accountOpen = false;
+    /*
+     * Rules:
+     * OBJ01-J. Limit accessibility of fields
+     * OBJ10-J. Do not use public static nonfinal fields
+     * 
+     * NUM02-J. Ensure that division and remainder operations do not result in divide-by-zero errors
+     * NUM04-J. Do not use floating-point numbers if precise computation is required
+     * NUM07-J. Do not attempt comparisons with NaN
+     * 
+     * ERR08-J. Do not catch NullPointerException or any of its ancestors
+     * 
+     * VNA00-J. Ensure visibility when accessing shared primitive variables
+     * VNA02-J. Ensure that compound operations on shared variables are atomic
+     * 
+     * STR01-J. Do not assume that a Java char fully represents a Unicode code point
+     * 
+     * MET05-J. Ensure that constructors do not call overridable methods
+     * 
+     * EXP00-J. Do not ignore values returned by methods
+     */
 
-    public boolean openAccount(String accountHolderName){
-        if(accountHolderName == null)
+    //private, class level variables
+    // OBJ01-J
+    // OBJ10-J
+    private final static int routingNumber = 8675309;
+    private final double interestRateMax = 0.02;
+    private BigDecimal interestRate = new BigDecimal("0.001"); //BigDecimal replaces floating point - NUM04-J
+    private int accountNumber;
+    private BigDecimal balance;
+    private String accountHolder;
+    private volatile boolean accountOpen = false; //volatile ensures this variable is visible to all threads - VNA00-J
+
+    /*
+     * default constructor
+     * 
+     * @param - none
+     * @return - void
+     */
+    public CheckingAccount()
+    {
+
+    }
+
+    /*
+     * non-default constructor. Allows user to create account with given name
+     * sets accountOpen to the success of the openAccount method
+     * 
+     * @param String accountHolderName: the name of the account holder
+     * @return - void
+     */
+    public CheckingAccount (String accountHolderName)
+    {
+        accountOpen = openAccount(accountHolderName); //instructor calls a non-overridable method - MET05-J
+        //return value is used to update another variable - EXP00-J
+    }
+
+    public final boolean openAccount(String accountHolderName){
+        if(accountHolderName == null) //NullPointerException is not thrown - ERR08-J
         {
             return false;
         }
-        balance = 0.0;
+        balance = new BigDecimal("0.0");
         accountHolder = accountHolderName;
         accountNumber = generateAccountNumber(accountHolderName);
-        accountOpen = true;
+        toggleAccountOpen();
 
         return true;
     }
@@ -28,12 +77,12 @@ public class CheckingAccount implements BankAccount{
     public boolean closeAccount(){
         if(accountOpen)
         {
-            accountOpen = false;
+            if(balance.doubleValue() < 0)
+            {
+                return false;
+            }
+            toggleAccountOpen();
             return true;
-        }
-        if(balance < 0)
-        {
-            return false;
         }
         return false;
     }
@@ -46,8 +95,10 @@ public class CheckingAccount implements BankAccount{
                 return false;
             }
 
-            balance -= amount;
-            if(balance >= 0)
+            BigDecimal withdrawalAmount = new BigDecimal(amount);
+            balance = balance.subtract(withdrawalAmount);
+
+            if(balance.doubleValue() >= 0)
             {
                 return true;
             }
@@ -65,8 +116,10 @@ public class CheckingAccount implements BankAccount{
                 return false;
             }
             
-            balance += amount;
-            if(balance >= 0)
+            BigDecimal depositAmount = new BigDecimal(amount);
+            balance = balance.add(depositAmount);
+
+            if(balance.doubleValue() >= 0)
             {
                 return true;
             }
@@ -92,7 +145,7 @@ public class CheckingAccount implements BankAccount{
         int randomNum = rand.nextInt(1000) + 500;
         for(int i = 0; i< accountHolderName.length(); i++)
         {
-            newAccountNumber += accountHolderName.charAt(i);
+            newAccountNumber += accountHolderName.codePointAt(i); //compensates for all unicode - STR01-J
         }
         newAccountNumber *= randomNum;
         return newAccountNumber;
@@ -100,7 +153,7 @@ public class CheckingAccount implements BankAccount{
 
     public double checkBalance()
     {
-        return balance;
+        return balance.doubleValue();
     }
 
     public String getAccountHolder()
@@ -125,6 +178,58 @@ public class CheckingAccount implements BankAccount{
 
     public double getInterestRate()
     {
-        return interestRate;
+        return interestRate.doubleValue();
+    }
+
+    public boolean setInterestRate(double newRate)
+    {
+        if(newRate <= interestRateMax && newRate >=0)
+        {
+            BigDecimal newInterestRate = new BigDecimal(newRate);
+            interestRate = newInterestRate;
+            return true;
+        }
+        return false;
+    }
+
+    /*
+     * method that returns the current open status of the bank account
+     * 
+     * This method is marked as synchronized to comply with security rules and ensure visibility across threads.
+     * This was not declared in the interface as interfaces cannot have synchronized methods.
+     * 
+     * @param - none:
+     * @return - boolean: the open status
+     */
+    public synchronized boolean getAccountOpen() //synchronized method - VNA02-J
+    {
+        return accountOpen;
+    }
+
+    /*
+     * method that toggles the current open status of the bank account
+     * 
+     * This method is marked as synchronized to comply with security rules and ensure visibility across threads.
+     * This was not declared in the interface as interfaces cannot have synchronized methods.
+     * 
+     * @param - none:
+     * @return - void
+     */
+    private synchronized void toggleAccountOpen()
+    {
+        accountOpen ^= true;
+    }
+
+    public double calcAmountGainedWithInterest()
+    {
+
+        if(interestRate.doubleValue() == 0.0) //checks if interest rate is zero - NUM02-J
+        {
+            return balance.doubleValue();
+        }
+
+        //multiplying a value is equal to dividing by the reciprocal
+        balance = balance.add(new BigDecimal(balance.doubleValue() / (1/interestRate.doubleValue())));
+        return balance.doubleValue();
     }
 }

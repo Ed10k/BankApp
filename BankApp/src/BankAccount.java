@@ -88,12 +88,26 @@ public interface BankAccount {
 
     /*
      * method that returns the current interest rate of the bank account.
-     * There is no 'set' method as the interest rate cannot be changed upon object creation.
      * 
      * @param - none:
      * @return - double: the interest rate
      */
     public double getInterestRate();
+
+    /*
+     * method that sets the current interest rate. Must be in specified range dictated by type of account
+     * @param - double newRate: the new rate to be set
+     * @return - boolean: indicating success of operation. False if outside specified range
+     */
+    public boolean setInterestRate(double newRate);
+
+    /*
+     * method that calculates how much is added to the balance with the current interest rate. Updates balance after operation.
+     * 
+     * @param - none:
+     * @return - double: the resulting balance after the calculation
+     */
+    public double calcAmountGainedWithInterest();
     
 }
 
