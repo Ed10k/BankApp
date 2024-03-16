@@ -1,10 +1,10 @@
-import java.util.Random;
 import java.math.BigDecimal;
+import java.util.Random;
 /*
- * This class is an implementation of a checking account.
+ * This class is an implementation of a savings account.
  * It implements the BankAccount interface
  */
-public class CheckingAccount implements BankAccount{
+public class SavingAccount implements BankAccount {
     /*
      * Rules:
      * OBJ01-J. Limit accessibility of fields
@@ -30,8 +30,8 @@ public class CheckingAccount implements BankAccount{
     // OBJ01-J
     // OBJ10-J
     private final static int routingNumber = 8675309;
-    private final double interestRateMax = 0.02;
-    private BigDecimal interestRate = new BigDecimal("0.001"); //BigDecimal replaces floating point - NUM04-J
+    private final double interestRateMin = 0.04;
+    private BigDecimal interestRate = new BigDecimal("0.045"); //BigDecimal replaces floating point - NUM04-J
     private int accountNumber;
     private BigDecimal balance;
     private String accountHolder;
@@ -43,7 +43,7 @@ public class CheckingAccount implements BankAccount{
      * @param - none
      * @return - void
      */
-    public CheckingAccount()
+    public SavingAccount()
     {
 
     }
@@ -55,7 +55,7 @@ public class CheckingAccount implements BankAccount{
      * @param String accountHolderName: the name of the account holder
      * @return - void
      */
-    public CheckingAccount (String accountHolderName)
+    public SavingAccount (String accountHolderName)
     {
         accountOpen = openAccount(accountHolderName); //instructor calls a non-overridable method - MET05-J
         //return value is used to update another variable - EXP00-J
@@ -84,6 +84,7 @@ public class CheckingAccount implements BankAccount{
             toggleAccountOpen();
             return true;
         }
+        
         return false;
     }
 
@@ -183,8 +184,8 @@ public class CheckingAccount implements BankAccount{
 
     public boolean setInterestRate(double newRate)
     {
-        if(newRate <= interestRateMax && newRate >=0)
-        {
+        if(newRate >= interestRateMin)
+        {   
             BigDecimal newInterestRate = new BigDecimal(newRate);
             interestRate = newInterestRate;
             return true;
