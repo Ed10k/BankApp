@@ -6,6 +6,8 @@ import java.text.Normalizer.Form;
 
 /**
  * Class description
+ * 
+ * @author Ian Gowland
  */
 
 public class Verification {
@@ -31,28 +33,26 @@ public class Verification {
      * VNA05-J. Ensure atomicity when reading and writing 64-bit values.
      * 
      * ERR01-J. Do not allow exceptions to expose sensitive information.
-     * 
+     * /
      
 
-    /* 
+    /**
      * IDS01-J. This class will take a String object and normalize it prior to validation.
      * Doing so will prevent the possibility of a user including a script tag in their String.
      *
-     * In this example, the emphasis of normalization would prevent a 
-     * user from using a script tag. Without the normalization, there would be no possibility 
-     * of this user executing a script. This scripting is called cross-site scripting (XSS) and
-     * can cause a user to unknowingly execute a malicious script that can expose their information
-     * or the website's information.
+     * The emphasis of normalization would prevent a user from using a script tag. 
+     * Without the normalization, there would be no possibility of this user executing a script. 
+     * This scripting is called cross-site scripting (XSS) and can cause a user to unknowingly execute 
+     * a malicious script that can expose their information or the website's information.
+     * 
+     * @param str - String to check or convert to normalized String.
+     * @return normalStr - Return string that has been normalized.
      */
-
-
      public static String normalizeString(String str) {
-        
         String normalStr = Normalizer.normalize(str, Form.NFKC);
         // Validate
         Pattern pattern = Pattern.compile("[<>]");
         Matcher matcher = pattern.matcher(normalStr);
-
         /*
          * This String is normalized, which essentially means that the string is converted into a 
          * standard format prior to validating the string. This will allow Strings to be comparable 
@@ -63,6 +63,25 @@ public class Verification {
             throw new IllegalStateException();
         } 
         return normalStr;
+     }
+
+     /**
+      * NUM07-J. Direct comparisons should never happen with NaN (not a number). These
+      * comparisons could cause unintended behaviors, so it must be confirmed that any 
+      * mathematical operation does not directly compare to NaN. This is especially true
+      * when working with floating point numbers. 
+      
+      * @param flo - Float variable to be checked if NaN
+      * @return - If the original variable is NaN, it gets
+      reassigned to null. If it's not, it just return the 
+      original number.
+      */
+     public static Float verifyFloatNonNaN(Float flo) {
+        if (Float.isNaN(flo)) {
+            System.out.println("Result is NaN.");
+            flo = null;
+        }
+        return flo;
      }
 
      
