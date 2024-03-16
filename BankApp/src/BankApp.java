@@ -1,8 +1,7 @@
-import java.util.*; 
+
 import java.util.HashMap;
 import java.util.Scanner;
-import java.io.*;
-import java.awt.*;
+import java.util.List;
 
 
 public class BankApp {
@@ -24,11 +23,16 @@ public class BankApp {
 
     private Scanner scanner = new Scanner(System.in);
 
+    @SuppressWarnings("null")
     public boolean option(int choice, boolean validated){
         boolean valid = false;
         String username = null;
         String password = null;
         BankUser user = null;
+        @SuppressWarnings("unused")
+        List<BankAccount> accounts;
+        BankAccount currentAccount = null;
+
         
         
         
@@ -45,18 +49,18 @@ public class BankApp {
                     if(password.equals(user.getPassword())){
                         System.out.println("Successful log in!");
                         valid = true;
-                        return valid;
+                        break;
                     }
                     else{
                         System.out.println("The password or username you entered is incorrect, please try again.");
-                        return valid;
+                        break;
                     }
 
                     
                 }
                 else{
                     System.out.println("No user with that username exists");
-                    return valid;
+                    break;
 
                 }
             case 2:
@@ -79,7 +83,8 @@ public class BankApp {
                 BankUser newUser = new BankUser(firstname, lastname, age, username, password);
                 users.put(username, newUser);
                 valid = true;
-                return valid;
+                break;
+                
 
             case 3:
                 if (!validated){
@@ -89,30 +94,108 @@ public class BankApp {
                 System.out.println("Would you like to add a savings or checking account? (1 for checking, 2 for savings)");
                 int account_preference = scanner.nextInt();
                 String accountHolderName = user.getFullName();
+                String accountType;
+                String accountName;
+                
+                
                 switch (account_preference) {
                     
                     case 1:
-                        CheckingAccount checking = new CheckingAccount(accountHolderName);
+                        System.out.println("What would you like to name this account?");
+                        accountName = scanner.nextLine();
+                        accountType = "Checking";
+                        CheckingAccount checking = new CheckingAccount(accountHolderName, accountType, accountName);
                         System.out.println("How much money would you like to deposit?");
                         double money = scanner.nextDouble();
                         checking.deposit(money);
                         user.addAccount(checking);
                         System.out.println("Thank you for choosing to open an account with us\n");
+                        break;
 
                         
                         
                     case 2: 
-                        SavingAccount savings = new SavingAccount();
+                        System.out.println("What would you like to name this account?");
+                        accountName = scanner.nextLine();
+                        accountType = "Savings";
+                        SavingAccount savings = new SavingAccount(accountHolderName, accountType, accountName);
                         System.out.println("How much money would you like to deposit?");
                         money = scanner.nextDouble();
                         savings.deposit(money);
                         user.addAccount(savings);
                         System.out.println("Thank you for choosing to open an account with us\n");
+                        break;
                 
                     default:
                     System.out.println("Invalid choice");
                         break;
+                        
+                
                 }
+            case 4:
+                System.out.println("What account would you like to access?");
+                for (BankAccount account: user.getAccounts()){
+                    System.out.println(" \n" + account);
+                }
+                System.out.println("If you know the account number, type below otherwise you can select by typing the account name");
+                String userInput = scanner.nextLine();
+                try{
+                    Integer accountNumber = Integer.parseInt(userInput);
+                    for(BankAccount account: user.getAccounts()){
+                        if (accountNumber.equals(account.getAccountNumber())){
+                            currentAccount = account;
+                            option(5, validated);
+                            break;
+                        }
+                    }
+
+                } catch(NumberFormatException e){
+                    for (BankAccount account:user.getAccounts()){
+                        if(userInput.equals(account.getAccountName())){
+                            currentAccount = account;
+                            option(5, validated);
+                            break;
+                        }
+                    }
+
+                }
+                break;
+
+
+            case 5:
+                
+                System.out.println("Would you like to deposit or withdraw? (1 for deposit, 2 for withdraw)");
+                int userIntInput =  scanner.nextInt();
+                Double amount;
+                switch (userIntInput) {
+                    case 1:
+                    System.out.println("How much would you like to deposit? ");
+                    amount = scanner.nextDouble();
+                    if(currentAccount.deposit(amount)){
+                        System.out.println(amount + " has been successfully deposited into account: " + currentAccount.getAccountName());
+                    }
+                    else{
+                        System.out.println(amount + " has not been successfully deposited into account: " + currentAccount.getAccountName());
+
+                    }
+                    break;
+                    case 2:
+                    System.out.println("How much would you like to withdraw? ");
+                    amount = scanner.nextDouble();
+                    if(currentAccount.withdraw(amount)){
+                        System.out.println(amount + " has been successfully deposited into account: " + currentAccount.getAccountName());
+                    }
+                    else{
+                        System.out.println(amount + " has not been successfully deposited into account: " + currentAccount.getAccountName());
+
+                    }
+                    break;
+                    default:
+                        System.out.println("Invalid choice");
+                        break;
+                }
+                
+                
                 
             
         
