@@ -35,6 +35,8 @@ public class CheckingAccount implements BankAccount{
     private int accountNumber;
     private BigDecimal balance;
     private String accountHolder;
+    private String accountName;
+    private String accountType;
     private volatile boolean accountOpen = false; //volatile ensures this variable is visible to all threads - VNA00-J
 
     /*
@@ -55,23 +57,43 @@ public class CheckingAccount implements BankAccount{
      * @param String accountHolderName: the name of the account holder
      * @return - void
      */
-    public CheckingAccount (String accountHolderName)
+    public CheckingAccount (String accountHolderName, String accountType, String accountName)
     {
-        accountOpen = openAccount(accountHolderName); //instructor calls a non-overridable method - MET05-J
+        accountOpen = openAccount(accountHolderName, accountType, accountName); //instructor calls a non-overridable method - MET05-J
         //return value is used to update another variable - EXP00-J
     }
 
-    public final boolean openAccount(String accountHolderName){
+    public final boolean openAccount(String accountHolderName, String accountType, String accountName){
         if(accountHolderName == null) //NullPointerException is not thrown - ERR08-J
         {
             return false;
         }
         balance = new BigDecimal("0.0");
         accountHolder = accountHolderName;
+        setAccountName(accountName);
+        setAccountType(accountType);
         accountNumber = generateAccountNumber(accountHolderName);
         toggleAccountOpen();
 
         return true;
+    }
+
+    public void setAccountName(String accountName){
+        this.accountName = accountName;
+
+    }
+
+    public String getAccountName(){
+        return accountName;
+
+    }
+
+    public void setAccountType(String accountType){
+        this.accountType = accountType;
+    }
+
+    public String getAccountType(){
+        return accountType;
     }
 
     public boolean closeAccount(){

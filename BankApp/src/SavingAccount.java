@@ -3,6 +3,12 @@ import java.util.Random;
 /*
  * This class is an implementation of a savings account.
  * It implements the BankAccount interface
+ * 
+ * 
+ * March 16: Joe Edozie modified this code to include getters and setters for the variables accoutName and accountType 
+ * I did this for the main method and i need to be able to sort through the list of accounts held by a single user 
+ * either by account name or account type. 
+ *
  */
 public class SavingAccount implements BankAccount {
     /*
@@ -35,6 +41,8 @@ public class SavingAccount implements BankAccount {
     private int accountNumber;
     private BigDecimal balance;
     private String accountHolder;
+    private String accountName ;
+    private String accountType;
     private volatile boolean accountOpen = false; //volatile ensures this variable is visible to all threads - VNA00-J
 
     /*
@@ -43,6 +51,9 @@ public class SavingAccount implements BankAccount {
      * @param - none
      * @return - void
      */
+
+
+    
     public SavingAccount()
     {
 
@@ -55,19 +66,23 @@ public class SavingAccount implements BankAccount {
      * @param String accountHolderName: the name of the account holder
      * @return - void
      */
-    public SavingAccount (String accountHolderName)
+    public SavingAccount (String accountHolderName, String accountType, String accountName)
     {
-        accountOpen = openAccount(accountHolderName); //instructor calls a non-overridable method - MET05-J
+        accountOpen = openAccount(accountHolderName, accountType, accountName); //instructor calls a non-overridable method - MET05-J
         //return value is used to update another variable - EXP00-J
     }
 
-    public final boolean openAccount(String accountHolderName){
+
+    
+    public final boolean openAccount(String accountHolderName, String accountType, String accountName){
         if(accountHolderName == null) //NullPointerException is not thrown - ERR08-J
         {
             return false;
         }
         balance = new BigDecimal("0.0");
         accountHolder = accountHolderName;
+        setAccountName(accountName);
+        setAccountType(accountType);
         accountNumber = generateAccountNumber(accountHolderName);
         toggleAccountOpen();
 
@@ -107,6 +122,24 @@ public class SavingAccount implements BankAccount {
         }
         return false;
         
+    }
+
+    public void setAccountName(String accountName){
+        this.accountName = accountName;
+
+    }
+
+    public String getAccountName(){
+        return accountName;
+
+    }
+
+    public void setAccountType(String accountType){
+        this.accountType = accountType;
+    }
+
+    public String getAccountType(){
+        return accountType;
     }
 
     public boolean deposit(double amount){
