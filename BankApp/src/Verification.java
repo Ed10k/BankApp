@@ -1,11 +1,15 @@
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.IOException;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 /**
- * Class description
+ * This class is a compilation of several rules that have been implemented and 
+ * that can easily be called statically from any class within the classes that 
+ * compose our application to verify safe operations, exception handling, etc. 
  * 
  * @author Ian Gowland
  */
@@ -19,18 +23,10 @@ public class Verification {
      * FIO08-J. Distinguish between characters or bytes read from a stream and -1
      * 
      * IDS00-J.
-     * IDS01-J. Normalize strings before validating them. 
      * 
-     * NUM07-J. Do not attempt comparisons with NaN. 
      * NUM00-J: Detect or Prevent Integer Overflow 
      * 
      * MET00-J. Validate Method Arguments 
-     * 
-     * SER03-J. Do not serialize unencrypted sensitive data.
-     * Set the password variable, whether in this class or in User to transient.
-     * Tbis will prevent the JVM from serializing the data. 
-     * Set the password variable, whether in this class or in User to transient.
-     * Tbis will prevent the JVM from serializing the data. 
      * 
      * VNA05-J. Ensure atomicity when reading and writing 64-bit values.
      * 
@@ -38,18 +34,18 @@ public class Verification {
      * /
      
 
-    /**
-     * IDS01-J. This class will take a String object and normalize it prior to validation.
-     * Doing so will prevent the possibility of a user including a script tag in their String.
-     *
-     * The emphasis of normalization would prevent a user from using a script tag. 
-     * Without the normalization, there would be no possibility of this user executing a script. 
-     * This scripting is called cross-site scripting (XSS) and can cause a user to unknowingly execute 
-     * a malicious script that can expose their information or the website's information.
-     * 
-     * @param str - String to check or convert to normalized String.
-     * @return normalStr - Return string that has been normalized.
-     */
+     /**
+      * IDS01-J. This class will take a String object and normalize it prior to validation.
+      * Doing so will prevent the possibility of a user including a script tag in their String.
+      *
+      * The emphasis of normalization would prevent a user from using a script tag. 
+      * Without the normalization, there would be no possibility of this user executing a script. 
+      * This scripting is called cross-site scripting (XSS) and can cause a user to unknowingly execute 
+      * a malicious script that can expose their information or the website's information.
+      * 
+      * @param str - String to check or convert to normalized String.
+      * @return normalStr - Return string that has been normalized.
+      */
      public static String normalizeString(String str) {
         String normalStr = Normalizer.normalize(str, Form.NFKC);
         // Validate
@@ -72,20 +68,44 @@ public class Verification {
       * comparisons could cause unintended behaviors, so it must be confirmed that any 
       * mathematical operation does not directly compare to NaN. This is especially true
       * when working with floating point numbers. 
-      
+      *
       * @param flo - Float variable to be checked if NaN
-      * @return - If the original variable is NaN, it gets
-      reassigned to null. If it's not, it just return the 
-      original number.
+      * @return - If the original variable is NaN, it gets reassigned to null. If it's not, 
+      * it just returns the original number.
       */
-     public static Float verifyFloatNonNaN(Float flo) {
-        if (Float.isNaN(flo)) {
+     public static Double verifyDoubleNonNaN(Double dub) {
+        if (Double.isNaN(dub)) {
             System.out.println("Result is NaN.");
-            flo = null;
+            dub = 0.0;
         }
-        return flo;
+        return dub;
      }
 
-     
+     /**
+      * ERR01-J. Do not allow exceptions to expose sensitive information. 
+      * 
+      * Whenever programming a try catch, this method can be called to handle it. 
+      * Certain messages should not be displayed as they can expose sensitive infomration
+      * about the server, but even the client as well. So anytime try catch blocks are 
+      * used in the program, pass in the Exception object where the exception can prevent
+      * having its message displayed. 
+      * 
+      * @param except - The encountered Exception, which will be assessed and handle based 
+      * on its Exception type.
+      */
+     public static boolean handleExceptions(Exception except) {
+
+        if(except instanceof FileNotFoundException) {
+            System.out.println("File not found exception occurred.");
+            return false;
+        } else if (except instanceof IOException) {
+            System.out.println("IOException occured.");
+            return false;
+        } else {
+            // Exception message can be displayed.
+            System.out.println(except.getMessage());
+        }
+        return true;
+     }
 
 }
