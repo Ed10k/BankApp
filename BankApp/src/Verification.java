@@ -1,6 +1,5 @@
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.IOException;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
 import java.util.regex.Matcher;
@@ -9,7 +8,7 @@ import java.util.regex.Pattern;
 /**
  * This class is a compilation of several rules that have been implemented and 
  * that can easily be called statically from any class within the classes that 
- * compose our application to verify safe operations, exception handling, etc. 
+ * compose this application to verify safe operations, exception handling, etc. 
  * 
  * @author Ian Gowland
  */
@@ -22,15 +21,12 @@ public class Verification {
      * FIO05-J. Do not expose buffers or their backing arrays methods to untrusted code 
      * FIO08-J. Distinguish between characters or bytes read from a stream and -1
      * 
-     * IDS00-J.
      * 
      * NUM00-J: Detect or Prevent Integer Overflow 
      * 
      * MET00-J. Validate Method Arguments 
      * 
      * VNA05-J. Ensure atomicity when reading and writing 64-bit values.
-     * 
-     * ERR01-J. Do not allow exceptions to expose sensitive information.
      * /
      
 
@@ -69,7 +65,11 @@ public class Verification {
       * mathematical operation does not directly compare to NaN. This is especially true
       * when working with floating point numbers. 
       *
-      * @param flo - Float variable to be checked if NaN
+      * EXP01-J: Don’t use a Null in a case where an Object is required. This rule is
+      * expressed within this method in the case that the argument is an instance of NaN.
+      * Instead of assigning the variable to null, assign to 0. 
+      *
+      * @param dub - Double variable to be checked if NaN
       * @return - If the original variable is NaN, it gets reassigned to null. If it's not, 
       * it just returns the original number.
       */
@@ -90,8 +90,7 @@ public class Verification {
       * used in the program, pass in the Exception object where the exception can prevent
       * having its message displayed. 
       * 
-      * @param except - The encountered Exception, which will be assessed and handle based 
-      * on its Exception type.
+      * @param except - Encountered Exception, which will be assessed based on its Exception type.
       */
      public static boolean handleExceptions(Exception except) {
 
@@ -107,5 +106,7 @@ public class Verification {
         }
         return true;
      }
+
+
 
 }
