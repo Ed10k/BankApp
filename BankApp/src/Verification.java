@@ -7,8 +7,8 @@ import java.util.regex.Pattern;
 
 /**
  * This class is a compilation of several rules that have been implemented and 
- * that can easily be called statically from any class within the classes that 
- * compose this application to verify safe operations, exception handling, etc. 
+ * that can easily be called statically from any class that composes this application 
+ * to verify safe operations, exception handling, etc. 
  * 
  * @author Ian Gowland
  */
@@ -20,7 +20,6 @@ public class Verification {
      * 
      * FIO05-J. Do not expose buffers or their backing arrays methods to untrusted code 
      * FIO08-J. Distinguish between characters or bytes read from a stream and -1
-     * 
      * 
      * NUM00-J: Detect or Prevent Integer Overflow 
      * 
@@ -84,7 +83,7 @@ public class Verification {
      /**
       * ERR01-J. Do not allow exceptions to expose sensitive information. 
       * 
-      * Whenever programming a try catch, this method can be called to handle it. 
+      * Whenever programming a try catch, this method can be called to handle exceptions.
       * Certain messages should not be displayed as they can expose sensitive infomration
       * about the server, but even the client as well. So anytime try catch blocks are 
       * used in the program, pass in the Exception object where the exception can prevent
@@ -106,6 +105,10 @@ public class Verification {
         }
         return true;
      }
+
+     //public static 
+
+     
 
 
 
