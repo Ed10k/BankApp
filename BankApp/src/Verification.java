@@ -167,14 +167,45 @@ public class Verification {
       * @param input - user's initial input
       * @return - true, once user has entered valid input for an integer
       */
-     public static boolean loopForInteger(String input) {
+     public static Integer loopForInteger(String input) {
         Scanner scan = new Scanner(System.in);
         System.out.print("Please enter an integer: ");
         while(!verifyInteger(input)){
             System.out.print("Incorrect.\nPlease enter an integer: ");
             input = scan.nextLine();
         }
-        return true;
+        scan.close();
+        return Integer.parseInt(input);
+     }
+
+     /**
+      * Validate that user input is a double
+      * @param input - input to be validated as a double
+      * @return - true if the user's input can be parsed into a double
+      */
+     public static boolean verifyDouble(String input) {
+        try {
+            Double.parseDouble(input);
+            return true;
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+     }
+
+     /**
+      * Loop until user enters dollar input to parse a double
+      * @param input - user's initial input
+      * @return - true, once user has entered valid dollar (float) input for an integer
+      */
+     public static Double loopForDollarAmount(String input) {
+        Scanner scan = new Scanner(System.in);
+        System.out.print("Please enter a dollar amount: ");
+        while(!verifyDouble(input)){
+            System.out.print("Incorrect.\nPlease enter a dollar amount: ");
+            input = scan.nextLine();
+        }
+        scan.close();
+        return Double.parseDouble(input);
      }
 
      
