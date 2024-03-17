@@ -60,7 +60,8 @@ public class CheckingAccount implements BankAccount{
      */
     public CheckingAccount (String accountHolderName, String accountType, String accountName)
     {
-        accountOpen = openAccount(accountHolderName, accountType, accountName); //instructor calls a non-overridable method - MET05-J
+        accountOpen = openAccount(accountHolderName, accountType, accountName);
+        //instructor calls a non-overridable method - MET05-J
         //return value is used to update another variable - EXP00-J
     }
 
@@ -68,12 +69,15 @@ public class CheckingAccount implements BankAccount{
         accountHolderName = Verification.normalizeString(accountHolderName);
         accountType = Verification.normalizeString(accountType);
         accountName = Verification.normalizeString(accountName);
-        if(accountHolderName == null) //NullPointerException is not thrown - ERR08-J
+
+        if(accountHolderName == null || accountType == null || accountName == null) 
         {
+            //NullPointerException is not thrown - ERR08-J
             return false;
         }
+
         balance = new BigDecimal("0.0");
-        accountHolder = accountHolderName;
+        setAccountHolder(accountHolderName);
         setAccountName(accountName);
         setAccountType(accountType);
         accountNumber = generateAccountNumber(accountHolderName);
