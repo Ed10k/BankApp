@@ -9,7 +9,7 @@ public interface BankAccount {
      * precondition: an account doesn't exist
      * postcondition: an account is ready to use
      */
-    public boolean openAccount(String accountHolderName);
+    public boolean openAccount(String accountHolderName, String accountType, String accountName);
 
      /*
      * method that deactivates account when user wishes to close
@@ -17,6 +17,14 @@ public interface BankAccount {
      * @return - boolean: indicates success of operation
      */
     public boolean closeAccount();
+
+    public void setAccountName(String accountName);
+    public String getAccountName();
+
+    public void setAccountType(String accountType);
+    public String getAccountType();
+
+
 
      /*
      * method that withdrawals a certain amount from the bank account
