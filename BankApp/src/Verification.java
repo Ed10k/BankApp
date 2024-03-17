@@ -2,6 +2,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -106,10 +107,29 @@ public class Verification {
         return true;
      }
 
-     //public static 
+     /**
+      * OBJ03-J. Prevent heap pollution.
+      * 
+      * Heap pollution occurs when a raw list (superclass Object list) contains 
+      * different data types for it's elements. This method would verify all 
+      * elements in the list are the same, which will prevent heap pollution 
+      * from occurring.
+      * 
+      * @param list - list that will have it's elements data types verified
+      * @return - true if the list contains all elements of the same type
+      */
+     public static boolean verifyGenericList(ArrayList list) {
 
-     
-
-
+        if(!list.isEmpty()) {
+            Object first = list.get(0);
+            for(int i = 0; i < list.size(); i++){
+                Object next = list.get(i);
+                if(!first.getClass().equals(next.getClass())) {
+                    return false;
+                }
+            }
+        }
+        return true;
+     }
 
 }
