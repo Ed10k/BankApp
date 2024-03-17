@@ -77,7 +77,8 @@ public class BankAppCopy {
                 System.out.println("Please enter your last name");
                 String lastname = scanner.nextLine();
                 System.out.println("Please enter your age");
-                int age = scanner.nextInt();
+                input = scanner.nextLine();
+                int age = Verification.loopForInteger(input);
 
                 BankUser newUser = new BankUser(firstname, lastname, age, username, password);
                 users.put(username, newUser);
@@ -109,7 +110,8 @@ public class BankAppCopy {
                         CheckingAccount checking = new CheckingAccount(accountHolderName, accountType, accountName);
                         
                         System.out.println("How much money would you like to deposit?");
-                        double money = scanner.nextDouble();
+                        input = scanner.nextLine();
+                        double money = Verification.loopForDollarAmount(input);
                         checking.deposit(money);
                         user.addAccount(checking);
                         System.out.println("Thank you for choosing to open an account with us\n");
@@ -121,7 +123,8 @@ public class BankAppCopy {
                         accountType = "Savings";
                         SavingAccount savings = new SavingAccount(accountHolderName, accountType, accountName);
                         System.out.println("How much money would you like to deposit?");
-                        money = scanner.nextDouble();
+                        input = scanner.nextLine();
+                        money = Verification.loopForDollarAmount(input);
                         savings.deposit(money);
                         user.addAccount(savings);
                         System.out.println("Thank you for choosing to open an account with us\n");
