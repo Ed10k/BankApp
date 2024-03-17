@@ -18,6 +18,7 @@ public interface BankAccount {
      */
     public boolean closeAccount();
 
+
      /*
      * method that withdrawals a certain amount from the bank account
      * @param - double amount: the amount the user wishes to withdrawal
