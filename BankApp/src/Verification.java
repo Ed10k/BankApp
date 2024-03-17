@@ -153,7 +153,11 @@ public class Verification {
       * @param input - input to be validated as an integer
       * @return - true if the user's input can be parsed into an int
       */
+<<<<<<< HEAD
     public static boolean verifyInteger(String input) {
+=======
+      public static boolean verifyInteger(String input) {
+>>>>>>> JOEDEV
         try {
             Integer.parseInt(input);
             return true;
@@ -169,6 +173,10 @@ public class Verification {
       */
      public static Integer loopForInteger(String input) {
         Scanner scan = new Scanner(System.in);
+<<<<<<< HEAD
+=======
+        System.out.print("Please enter an integer: ");
+>>>>>>> JOEDEV
         while(!verifyInteger(input)){
             System.out.print("Incorrect.\nPlease enter an integer: ");
             input = scan.nextLine();
@@ -198,6 +206,10 @@ public class Verification {
       */
      public static Double loopForDollarAmount(String input) {
         Scanner scan = new Scanner(System.in);
+<<<<<<< HEAD
+=======
+        System.out.print("Please enter a dollar amount: ");
+>>>>>>> JOEDEV
         while(!verifyDouble(input)){
             System.out.print("Incorrect.\nPlease enter a dollar amount: ");
             input = scan.nextLine();
