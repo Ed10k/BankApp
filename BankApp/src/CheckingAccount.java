@@ -1,3 +1,4 @@
+//@author Matthew Fonner
 import java.util.Random;
 import java.math.BigDecimal;
 /*
@@ -159,7 +160,7 @@ public class CheckingAccount implements BankAccount{
     /*
      * This method is a private helper method for generating a random account number. It instantiates a random integer.
      * The accountHolderName is looped through. The characters are converted into ints and added together. This sum
-     * is added to a random integer and the result is the account number.
+     * is multiplied to a random integer and the result is the account number.
      * 
      * This method is not in the interface as interfaces cannot have private methods.
      * 
