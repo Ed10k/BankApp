@@ -61,7 +61,7 @@ public class CheckingAccount implements BankAccount{
     public CheckingAccount (String accountHolderName, String accountType, String accountName)
     {
         accountOpen = openAccount(accountHolderName, accountType, accountName);
-        //instructor calls a non-overridable method - MET05-J
+        //constructor calls a non-overridable method - MET05-J
         //return value is used to update another variable - EXP00-J
     }
 
