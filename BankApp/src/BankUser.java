@@ -1,6 +1,11 @@
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+     * Rules:
+     * EXP01-J: Don’t Use a Null in a Case where an Object is Required
+     */
+
 public class BankUser {
     private String firstName;
     private String lastName;
@@ -19,7 +24,7 @@ public class BankUser {
     }
     
     public String getFirstName() {
-        return firstName;
+        return firstName;   //EXP01-J
     }
 
     public void setLastName(String lastName) {
