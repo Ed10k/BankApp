@@ -1,6 +1,7 @@
-
+package BankApp;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 import java.util.List;
 
 
@@ -44,35 +45,44 @@ public class BankApp {
                 username = scanner.nextLine();
                 System.out.println("Please enter your password:");
                 password = scanner.nextLine();
-                if (users.containsKey(username)){
-                    user = users.get(username);
-                    if(password.equals(user.getPassword())){
-                        System.out.println("Successful log in!");
-                        valid = true;
-                        break;
+                if(sanitizeUsername(username) && sanitzePassword(password)){
+                    if (users.containsKey(username)){
+                        user = users.get(username);
+                        if(password.equals(user.getPassword())){
+                            System.out.println("Successful log in!");
+                            valid = true;
+                            break;
+                        }
+                        else{
+                            System.out.println("The password or username you entered is incorrect, please try again.");
+                            break;
+                        }
+    
+                        
                     }
                     else{
-                        System.out.println("The password or username you entered is incorrect, please try again.");
+                        System.out.println("No user with that username exists");
                         break;
+    
                     }
-
-                    
-                }
-                else{
-                    System.out.println("No user with that username exists");
-                    break;
-
                 }
             case 2:
                 System.out.println("Thank you for signing up with us!\n");
                 System.out.println("Please enter a desired username\n");
                 username = scanner.nextLine();
-                while (users.containsKey(username)){
-                    System.out.println("Sorry, that username is taken. Pick a different username:\n ");
-                    username = scanner.nextLine();
+                if(sanitizeUsername(username)){
+                    while (users.containsKey(username)){
+                        System.out.println("Sorry, that username is taken. Pick a different username:\n ");
+                        username = scanner.nextLine();
+                    }
                 }
                 System.out.println("What is your password?\n");
                 password = scanner.nextLine();
+                while(!sanitzePassword(password)){
+                    System.out.println("Invalid Password.");
+                    System.out.println("What is your password?\n");
+                    password = scanner.nextLine();
+                }
                 System.out.println("Please enter your first name: \n");
                 String firstname = scanner.nextLine();
                 System.out.println("Please enter your last name");
@@ -213,6 +223,24 @@ public class BankApp {
         System.out.println("Hello, welcome to the Banking App\n What action would you like to perform?");
         while (isOn){
             
+        }
+    }
+
+    public boolean sanitizeUsername(String str){
+        if(Pattern.matches("A-Za-z0-9", str)){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    public boolean sanitzePassword(String str){
+        if(Pattern.matches("A-Za-z0-9!@#$%^&*.?", str)){
+            return true;
+        }
+        else{
+            return false;
         }
     }
 

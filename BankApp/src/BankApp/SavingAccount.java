@@ -1,4 +1,4 @@
-//@author Matthew Fonner
+package BankApp;
 import java.math.BigDecimal;
 import java.util.Random;
 /*
@@ -76,8 +76,6 @@ public class SavingAccount implements BankAccount {
 
     
     public final boolean openAccount(String accountHolderName, String accountType, String accountName){
-        accountType = Verification.normalizeString(accountType);
-        accountName = Verification.normalizeString(accountName);
         if(accountHolderName == null) //NullPointerException is not thrown - ERR08-J
         {
             return false;
@@ -107,8 +105,6 @@ public class SavingAccount implements BankAccount {
     }
 
     public boolean withdraw(double amount){
-
-        amount = Verification.verifyDoubleNonNaN(amount);
         if(accountOpen)
         {
             if(amount < 0)
@@ -130,7 +126,6 @@ public class SavingAccount implements BankAccount {
     }
 
     public void setAccountName(String accountName){
-        accountName = Verification.normalizeString(accountName);
         this.accountName = accountName;
 
     }
@@ -141,7 +136,6 @@ public class SavingAccount implements BankAccount {
     }
 
     public void setAccountType(String accountType){
-        accountType = Verification.normalizeString(accountType);
         this.accountType = accountType;
     }
 
@@ -150,7 +144,6 @@ public class SavingAccount implements BankAccount {
     }
 
     public boolean deposit(double amount){
-        amount = Verification.verifyDoubleNonNaN(amount);
         if(accountOpen)
         {
             if(amount < 0)
@@ -182,7 +175,6 @@ public class SavingAccount implements BankAccount {
      */
     private int generateAccountNumber(String accountHolderName)
     {   
-        accountHolderName = Verification.normalizeString(accountHolderName);
         int newAccountNumber = 0;
         Random rand = new Random();
         int randomNum = rand.nextInt(1000) + 500;
@@ -205,8 +197,7 @@ public class SavingAccount implements BankAccount {
     }
 
     public void setAccountHolder(String newAccountHolder)
-    {   
-        accountHolder = Verification.normalizeString(newAccountHolder);
+    {
         accountHolder = newAccountHolder;
     }
 
@@ -227,7 +218,6 @@ public class SavingAccount implements BankAccount {
 
     public boolean setInterestRate(double newRate)
     {
-        newRate = Verification.verifyDoubleNonNaN(newRate);
         if(newRate >= interestRateMin)
         {   
             BigDecimal newInterestRate = new BigDecimal(newRate);
@@ -275,6 +265,23 @@ public class SavingAccount implements BankAccount {
 
         //multiplying a value is equal to dividing by the reciprocal
         balance = balance.add(new BigDecimal(balance.doubleValue() / (1/interestRate.doubleValue())));
-        return balance.doubleValue();
+        try{
+            if(!verifyDoubleValue(balance.doubleValue())){
+                throw new Exception();
+            }
+        } catch(Exception e){
+
+        }
+        return(balance.doubleValue());
+    }
+
+    public boolean verifyDoubleValue(double db){
+        try{
+            Double.isNaN(db);
+            Double.isFinite(db);
+        } catch(Exception e){
+            return false;
+        }
+        return true;
     }
 }
