@@ -1,11 +1,23 @@
-//@author Matthew Fonner
-import java.util.Random;
+package BankApp;
 import java.math.BigDecimal;
+import java.util.Random;
 /*
- * This class is an implementation of a checking account.
+ * This class is an implementation of a savings account.
  * It implements the BankAccount interface
+ * 
+ * 
+ * March 16: Joe Edozie modified this code to include getters and setters for the variables accoutName and accountType 
+ * I did this for the main method and i need to be able to sort through the list of accounts held by a single user 
+ * either by account name or account type. 
+ *
+ * 
+ * 
+ * March 16: Joe Edozie modified this code to include getters and setters for the variables accoutName and accountType 
+ * I did this for the main method and i need to be able to sort through the list of accounts held by a single user 
+ * either by account name or account type. 
+ *
  */
-public class CheckingAccount implements BankAccount{
+public class SavingAccount implements BankAccount {
     /*
      * Rules:
      * OBJ01-J. Limit accessibility of fields
@@ -31,12 +43,12 @@ public class CheckingAccount implements BankAccount{
     // OBJ01-J
     // OBJ10-J
     private final static int routingNumber = 8675309;
-    private final double interestRateMax = 0.02;
-    private BigDecimal interestRate = new BigDecimal("0.001"); //BigDecimal replaces floating point - NUM04-J
+    private final double interestRateMin = 0.04;
+    private BigDecimal interestRate = new BigDecimal("0.045"); //BigDecimal replaces floating point - NUM04-J
     private int accountNumber;
     private BigDecimal balance;
     private String accountHolder;
-    private String accountName;
+    private String accountName ;
     private String accountType;
     private volatile boolean accountOpen = false; //volatile ensures this variable is visible to all threads - VNA00-J
 
@@ -46,7 +58,10 @@ public class CheckingAccount implements BankAccount{
      * @param - none
      * @return - void
      */
-    public CheckingAccount()
+
+
+    
+    public SavingAccount()
     {
 
     }
@@ -58,51 +73,27 @@ public class CheckingAccount implements BankAccount{
      * @param String accountHolderName: the name of the account holder
      * @return - void
      */
-    public CheckingAccount (String accountHolderName, String accountType, String accountName)
+    public SavingAccount (String accountHolderName, String accountType, String accountName)
     {
-        accountOpen = openAccount(accountHolderName, accountType, accountName);
-        //constructor calls a non-overridable method - MET05-J
+        accountOpen = openAccount(accountHolderName, accountType, accountName); //instructor calls a non-overridable method - MET05-J
         //return value is used to update another variable - EXP00-J
     }
 
-    public final boolean openAccount(String accountHolderName, String accountType, String accountName){
-        accountHolderName = Verification.normalizeString(accountHolderName);
-        accountType = Verification.normalizeString(accountType);
-        accountName = Verification.normalizeString(accountName);
 
-        if(accountHolderName == null || accountType == null || accountName == null) 
+    
+    public final boolean openAccount(String accountHolderName, String accountType, String accountName){
+        if(accountHolderName == null) //NullPointerException is not thrown - ERR08-J
         {
-            //NullPointerException is not thrown - ERR08-J
             return false;
         }
-
         balance = new BigDecimal("0.0");
-        setAccountHolder(accountHolderName);
+        accountHolder = accountHolderName;
         setAccountName(accountName);
         setAccountType(accountType);
         accountNumber = generateAccountNumber(accountHolderName);
         toggleAccountOpen();
 
         return true;
-    }
-
-    public void setAccountName(String accountName){
-        this.accountName = accountName;
-
-    }
-
-    public String getAccountName(){
-        return accountName;
-
-    }
-
-    public void setAccountType(String accountType){
-        accountType = Verification.normalizeString(accountType);
-        this.accountType = accountType;
-    }
-
-    public String getAccountType(){
-        return accountType;
     }
 
     public boolean closeAccount(){
@@ -115,11 +106,11 @@ public class CheckingAccount implements BankAccount{
             toggleAccountOpen();
             return true;
         }
+        
         return false;
     }
 
     public boolean withdraw(double amount){
-        amount = Verification.verifyDoubleNonNaN(amount);
         if(accountOpen)
         {
             if(amount < 0)
@@ -140,8 +131,25 @@ public class CheckingAccount implements BankAccount{
         
     }
 
+    public void setAccountName(String accountName){
+        this.accountName = accountName;
+
+    }
+
+    public String getAccountName(){
+        return accountName;
+
+    }
+
+    public void setAccountType(String accountType){
+        this.accountType = accountType;
+    }
+
+    public String getAccountType(){
+        return accountType;
+    }
+
     public boolean deposit(double amount){
-        amount = Verification.verifyDoubleNonNaN(amount);
         if(accountOpen)
         {
             if(amount < 0)
@@ -164,7 +172,7 @@ public class CheckingAccount implements BankAccount{
     /*
      * This method is a private helper method for generating a random account number. It instantiates a random integer.
      * The accountHolderName is looped through. The characters are converted into ints and added together. This sum
-     * is multiplied to a random integer and the result is the account number.
+     * is added to a random integer and the result is the account number.
      * 
      * This method is not in the interface as interfaces cannot have private methods.
      * 
@@ -172,8 +180,7 @@ public class CheckingAccount implements BankAccount{
      * @return - int: the resulting account number
      */
     private int generateAccountNumber(String accountHolderName)
-    {  
-        accountHolderName = Verification.normalizeString(accountHolderName); 
+    {   
         int newAccountNumber = 0;
         Random rand = new Random();
         int randomNum = rand.nextInt(1000) + 500;
@@ -196,8 +203,7 @@ public class CheckingAccount implements BankAccount{
     }
 
     public void setAccountHolder(String newAccountHolder)
-    {   
-        newAccountHolder = Verification.normalizeString(newAccountHolder); 
+    {
         accountHolder = newAccountHolder;
     }
 
@@ -217,10 +223,9 @@ public class CheckingAccount implements BankAccount{
     }
 
     public boolean setInterestRate(double newRate)
-    {   
-        newRate = Verification.verifyDoubleNonNaN(newRate);
-        if(newRate <= interestRateMax && newRate >=0)
-        {
+    {
+        if(newRate >= interestRateMin)
+        {   
             BigDecimal newInterestRate = new BigDecimal(newRate);
             interestRate = newInterestRate;
             return true;
@@ -266,6 +271,23 @@ public class CheckingAccount implements BankAccount{
 
         //multiplying a value is equal to dividing by the reciprocal
         balance = balance.add(new BigDecimal(balance.doubleValue() / (1/interestRate.doubleValue())));
-        return balance.doubleValue();
+        try{
+            if(!verifyDoubleValue(balance.doubleValue())){
+                throw new Exception();
+            }
+        } catch(Exception e){
+
+        }
+        return(balance.doubleValue());
+    }
+
+    public boolean verifyDoubleValue(double db){
+        try{
+            Double.isNaN(db);
+            Double.isFinite(db);
+        } catch(Exception e){
+            return false;
+        }
+        return true;
     }
 }
