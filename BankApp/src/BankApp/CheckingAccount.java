@@ -1,3 +1,4 @@
+package BankApp;
 import java.util.Random;
 import java.math.BigDecimal;
 /*
@@ -252,6 +253,23 @@ public class CheckingAccount implements BankAccount{
 
         //multiplying a value is equal to dividing by the reciprocal
         balance = balance.add(new BigDecimal(balance.doubleValue() / (1/interestRate.doubleValue())));
-        return balance.doubleValue();
+        try{
+            if(!verifyDoubleValue(balance.doubleValue())){
+                throw new Exception();
+            }
+        } catch(Exception e){
+
+        }
+        return(balance.doubleValue());
+    }
+
+    public boolean verifyDoubleValue(double db){
+        try{
+            Double.isNaN(db);
+            Double.isFinite(db);
+        } catch(Exception e){
+            return false;
+        }
+        return true;
     }
 }

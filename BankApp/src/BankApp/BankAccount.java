@@ -1,3 +1,4 @@
+package BankApp;
 /*
  * This is the BankAccount interface that will be implemented in a checking account and savings account
  */
@@ -101,6 +102,8 @@ public interface BankAccount {
      * @return - double: the resulting balance after the calculation
      */
     public double calcAmountGainedWithInterest();
+
+    public boolean verifyDoubleValue(double db);
     
 }
 
