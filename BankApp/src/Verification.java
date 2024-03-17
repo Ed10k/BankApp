@@ -12,21 +12,20 @@ import java.util.regex.Pattern;
  * that can be called statically to verify safe operations, exception handling
  * and exception messages, etc. 
  * 
+ * Rules referenced in this class:
+ * IDS01-J. This class will take a String object and normalize it prior to validation.
+ * NUM07-J. Direct comparisons should never happen with NaN (not a number). 
+ * EXP01-J: Don’t use a Null in a case where an Object is required.
+ * ERR01-J. Do not allow exceptions to expose sensitive information. 
+ * OBJ03-J. Prevent heap pollution.
+ * 
  * @author Ian Gowland
  */
 
 public class Verification {
 
-    /*
-     * Rules referenced in this class:
-     * 
-     * IDS01-J. This class will take a String object and normalize it prior to validation.
-     * NUM07-J. Direct comparisons should never happen with NaN (not a number). 
-     * EXP01-J: Don’t use a Null in a case where an Object is required.
-     * ERR01-J. Do not allow exceptions to expose sensitive information. 
-     * OBJ03-J. Prevent heap pollution.
-     */
-  
+    private static final String SENTINEL = "*";
+
      /**
       * IDS01-J. This class will take a String object and normalize it prior to validation.
       * Doing so will prevent the possibility of a user including a script tag in their String.
@@ -139,8 +138,37 @@ public class Verification {
         Scanner scan = new Scanner(System.in);
         System.out.print("Please enter your password: ");
         String input = scan.nextLine();
-        while(!input.equals(user.getPassword())) {
+        // while(!input.equals(user.getPassword()) && !input.equals(SENTINEL))
+        while(!input.equals(user.getPassword()) && !input.equals(SENTINEL)) {
+            //System.out.print("Incorrect.\nPlease enter your password:  (SENTINEL: Enter * to terminate loop.)");
             System.out.print("Incorrect.\nPlease enter your password: ");
+            input = scan.nextLine();
+        }
+        scan.close();
+        return true;
+     }
+
+     /**
+      * Validate that user input is an integer
+      * @param input - input to be validated as an integer
+      */
+      public static boolean verifyInteger(String input) {
+        try {
+            Integer.parseInt(input);
+            return true;
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+     }
+
+     /**
+      * 
+      */
+     public static boolean loopForInteger(String input) {
+        Scanner scan = new Scanner(System.in);
+        System.out.print("Please enter an integer: ");
+        while(!verifyInteger(input)){
+            System.out.print("Incorrect.\nPlease enter an integer: ");
             input = scan.nextLine();
         }
         return true;
