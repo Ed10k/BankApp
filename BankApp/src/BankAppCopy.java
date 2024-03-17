@@ -25,7 +25,7 @@ public class BankAppCopy {
 
     @SuppressWarnings("null")
     public boolean option(int choice, boolean validated) {
-        
+
         boolean valid = false;
         String username = null;
         String password = null;
@@ -197,7 +197,9 @@ public class BankAppCopy {
                         System.out.println("Invalid choice");
                         break;
                 }
-                
+            case 6: 
+                System.out.println("Thank you for your patronage, logging out.");
+                break;
             // 1st level switch 
             default:
             System.out.println("Invalid choice");
@@ -212,7 +214,8 @@ public class BankAppCopy {
         boolean isOn = true;
         System.out.println("Hello, welcome to the Banking App!\n What action would you like to perform?");
         while (isOn){
-            
+            System.out.println("Options:\n 1: Log in\n 2: Create profile\n 3: Add new bank account\n" +
+            "4: Check account balance\n 5: Make a transaction 6: Log out");
         }
     }
 
