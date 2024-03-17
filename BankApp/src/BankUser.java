@@ -10,9 +10,10 @@ public class BankUser {
     private List<BankAccount> accounts;
 
     public BankUser(String firstName, String lastName, int age, String username, String password) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.username = username;
+
+        this.firstName = Verification.normalizeString(firstName);
+        this.lastName = Verification.normalizeString(lastName);
+        this.username = Verification.normalizeString(username);
         this.age = age;
         this.accounts = new ArrayList<>();
     }
@@ -27,8 +28,9 @@ public class BankUser {
     }
 
     public void setPassword(String password){
+        Verification.verifyPassword(this);
+        Verification.normalizeString(password);
         this.password = password;
-        
     }
     
     public String getPassword(){
@@ -36,6 +38,7 @@ public class BankUser {
     }
 
     public void setFirstName(String firstName) {
+        Verification.normalizeString(firstName);
         this.firstName = firstName;
     }
     
@@ -44,6 +47,7 @@ public class BankUser {
     }
 
     public void setLastName(String lastName) {
+        Verification.normalizeString(lastName);
         this.lastName = lastName;
     }
     

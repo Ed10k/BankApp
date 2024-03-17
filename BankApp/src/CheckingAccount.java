@@ -64,6 +64,9 @@ public class CheckingAccount implements BankAccount{
     }
 
     public final boolean openAccount(String accountHolderName, String accountType, String accountName){
+        accountHolderName = Verification.normalizeString(accountHolderName);
+        accountType = Verification.normalizeString(accountType);
+        accountName = Verification.normalizeString(accountName);
         if(accountHolderName == null) //NullPointerException is not thrown - ERR08-J
         {
             return false;
@@ -89,6 +92,7 @@ public class CheckingAccount implements BankAccount{
     }
 
     public void setAccountType(String accountType){
+        accountType = Verification.normalizeString(accountType);
         this.accountType = accountType;
     }
 
@@ -110,6 +114,7 @@ public class CheckingAccount implements BankAccount{
     }
 
     public boolean withdraw(double amount){
+        amount = Verification.verifyDoubleNonNaN(amount);
         if(accountOpen)
         {
             if(amount < 0)
@@ -131,6 +136,7 @@ public class CheckingAccount implements BankAccount{
     }
 
     public boolean deposit(double amount){
+        amount = Verification.verifyDoubleNonNaN(amount);
         if(accountOpen)
         {
             if(amount < 0)
@@ -161,7 +167,8 @@ public class CheckingAccount implements BankAccount{
      * @return - int: the resulting account number
      */
     private int generateAccountNumber(String accountHolderName)
-    {   
+    {  
+        accountHolderName = Verification.normalizeString(accountHolderName); 
         int newAccountNumber = 0;
         Random rand = new Random();
         int randomNum = rand.nextInt(1000) + 500;
@@ -184,7 +191,8 @@ public class CheckingAccount implements BankAccount{
     }
 
     public void setAccountHolder(String newAccountHolder)
-    {
+    {   
+        newAccountHolder = Verification.normalizeString(newAccountHolder); 
         accountHolder = newAccountHolder;
     }
 
@@ -204,7 +212,8 @@ public class CheckingAccount implements BankAccount{
     }
 
     public boolean setInterestRate(double newRate)
-    {
+    {   
+        newRate = Verification.verifyDoubleNonNaN(newRate);
         if(newRate <= interestRateMax && newRate >=0)
         {
             BigDecimal newInterestRate = new BigDecimal(newRate);

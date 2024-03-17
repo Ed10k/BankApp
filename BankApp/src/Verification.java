@@ -151,6 +151,7 @@ public class Verification {
      /**
       * Validate that user input is an integer
       * @param input - input to be validated as an integer
+      * @return - true if the user's input can be parsed into an int
       */
       public static boolean verifyInteger(String input) {
         try {
@@ -162,7 +163,9 @@ public class Verification {
      }
 
      /**
-      * 
+      * Loop until user enters valid input to parse an integer
+      * @param input - user's initial input
+      * @return - true, once user has entered valid input for an integer
       */
      public static boolean loopForInteger(String input) {
         Scanner scan = new Scanner(System.in);
