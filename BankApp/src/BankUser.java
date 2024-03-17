@@ -35,8 +35,6 @@ public class BankUser {
         return password;
     }
 
-
-
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }

@@ -3,13 +3,14 @@ import java.io.IOException;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * This class is a compilation of several rules that have been implemented and 
- * that can easily be called statically from any class that composes this application 
- * to verify safe operations, exception handling, etc. 
+ * that can be called statically to verify safe operations, exception handling
+ * and exception messages, etc. 
  * 
  * @author Ian Gowland
  */
@@ -17,19 +18,15 @@ import java.util.regex.Pattern;
 public class Verification {
 
     /*
-     * Rules:
+     * Rules referenced in this class:
      * 
-     * FIO05-J. Do not expose buffers or their backing arrays methods to untrusted code 
-     * FIO08-J. Distinguish between characters or bytes read from a stream and -1
-     * 
-     * NUM00-J: Detect or Prevent Integer Overflow 
-     * 
-     * MET00-J. Validate Method Arguments 
-     * 
-     * VNA05-J. Ensure atomicity when reading and writing 64-bit values.
-     * /
-     
-
+     * IDS01-J. This class will take a String object and normalize it prior to validation.
+     * NUM07-J. Direct comparisons should never happen with NaN (not a number). 
+     * EXP01-J: Don’t use a Null in a case where an Object is required.
+     * ERR01-J. Do not allow exceptions to expose sensitive information. 
+     * OBJ03-J. Prevent heap pollution.
+     */
+  
      /**
       * IDS01-J. This class will take a String object and normalize it prior to validation.
       * Doing so will prevent the possibility of a user including a script tag in their String.
@@ -67,7 +64,8 @@ public class Verification {
       *
       * EXP01-J: Don’t use a Null in a case where an Object is required. This rule is
       * expressed within this method in the case that the argument is an instance of NaN.
-      * Instead of assigning the variable to null, assign to 0. 
+      * Instead of assigning the variable to null, assign to 0 instead to prevent the 
+      * potential NullPointerException. 
       *
       * @param dub - Double variable to be checked if NaN
       * @return - If the original variable is NaN, it gets reassigned to null. If it's not, 
@@ -100,6 +98,7 @@ public class Verification {
         } else if (except instanceof IOException) {
             System.out.println("IOException occured.");
             return false;
+        // Add else if for any other risky exception and it's corresponding getMessage
         } else {
             // Exception message can be displayed.
             System.out.println(except.getMessage());
@@ -131,5 +130,22 @@ public class Verification {
         }
         return true;
      }
+
+     /**
+      * This method prompts a user to enter their password until it is correct.
+      * @param user - BankUser, signifying the client that needs to verify their password.
+      */
+     public static boolean verifyPassword(BankUser user) {
+        Scanner scan = new Scanner(System.in);
+        System.out.print("Please enter your password: ");
+        String input = scan.nextLine();
+        while(!input.equals(user.getPassword())) {
+            System.out.print("Incorrect.\nPlease enter your password: ");
+            input = scan.nextLine();
+        }
+        return true;
+     }
+
+     
 
 }
