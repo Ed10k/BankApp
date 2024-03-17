@@ -10,6 +10,12 @@ import java.util.Random;
  * I did this for the main method and i need to be able to sort through the list of accounts held by a single user 
  * either by account name or account type. 
  *
+ * 
+ * 
+ * March 16: Joe Edozie modified this code to include getters and setters for the variables accoutName and accountType 
+ * I did this for the main method and i need to be able to sort through the list of accounts held by a single user 
+ * either by account name or account type. 
+ *
  */
 public class SavingAccount implements BankAccount {
     /*

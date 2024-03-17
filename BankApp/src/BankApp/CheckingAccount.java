@@ -38,6 +38,7 @@ public class CheckingAccount implements BankAccount{
     private String accountHolder;
     private String accountName;
     private String accountType;
+    
     private volatile boolean accountOpen = false; //volatile ensures this variable is visible to all threads - VNA00-J
 
     /*
@@ -58,6 +59,7 @@ public class CheckingAccount implements BankAccount{
      * @param String accountHolderName: the name of the account holder
      * @return - void
      */
+  
     public CheckingAccount (String accountHolderName, String accountType, String accountName)
     {
         accountOpen = openAccount(accountHolderName, accountType, accountName); //instructor calls a non-overridable method - MET05-J
