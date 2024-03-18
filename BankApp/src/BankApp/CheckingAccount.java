@@ -1,4 +1,4 @@
-//@author Matthew Fonner
+package BankApp;
 import java.util.Random;
 import java.math.BigDecimal;
 /*
@@ -63,23 +63,17 @@ public class CheckingAccount implements BankAccount{
     public CheckingAccount (String accountHolderName, String accountType, String accountName)
     {
         accountOpen = openAccount(accountHolderName, accountType, accountName);
-        //instructor calls a non-overridable method - MET05-J
+        //constructor calls a non-overridable method - MET05-J
         //return value is used to update another variable - EXP00-J
     }
 
     public final boolean openAccount(String accountHolderName, String accountType, String accountName){
-        accountHolderName = Verification.normalizeString(accountHolderName);
-        accountType = Verification.normalizeString(accountType);
-        accountName = Verification.normalizeString(accountName);
-
-        if(accountHolderName == null || accountType == null || accountName == null) 
+        if(accountHolderName == null) //NullPointerException is not thrown - ERR08-J
         {
-            //NullPointerException is not thrown - ERR08-J
             return false;
         }
-
         balance = new BigDecimal("0.0");
-        setAccountHolder(accountHolderName);
+        accountHolder = accountHolderName;
         setAccountName(accountName);
         setAccountType(accountType);
         accountNumber = generateAccountNumber(accountHolderName);
@@ -99,7 +93,6 @@ public class CheckingAccount implements BankAccount{
     }
 
     public void setAccountType(String accountType){
-        accountType = Verification.normalizeString(accountType);
         this.accountType = accountType;
     }
 
@@ -121,7 +114,6 @@ public class CheckingAccount implements BankAccount{
     }
 
     public boolean withdraw(double amount){
-        amount = Verification.verifyDoubleNonNaN(amount);
         if(accountOpen)
         {
             if(amount < 0)
@@ -143,7 +135,6 @@ public class CheckingAccount implements BankAccount{
     }
 
     public boolean deposit(double amount){
-        amount = Verification.verifyDoubleNonNaN(amount);
         if(accountOpen)
         {
             if(amount < 0)
@@ -166,7 +157,7 @@ public class CheckingAccount implements BankAccount{
     /*
      * This method is a private helper method for generating a random account number. It instantiates a random integer.
      * The accountHolderName is looped through. The characters are converted into ints and added together. This sum
-     * is multiplied to a random integer and the result is the account number.
+     * is added to a random integer and the result is the account number.
      * 
      * This method is not in the interface as interfaces cannot have private methods.
      * 
@@ -174,8 +165,7 @@ public class CheckingAccount implements BankAccount{
      * @return - int: the resulting account number
      */
     private int generateAccountNumber(String accountHolderName)
-    {  
-        accountHolderName = Verification.normalizeString(accountHolderName); 
+    {   
         int newAccountNumber = 0;
         Random rand = new Random();
         int randomNum = rand.nextInt(1000) + 500;
@@ -198,8 +188,7 @@ public class CheckingAccount implements BankAccount{
     }
 
     public void setAccountHolder(String newAccountHolder)
-    {   
-        newAccountHolder = Verification.normalizeString(newAccountHolder); 
+    {
         accountHolder = newAccountHolder;
     }
 
@@ -219,8 +208,7 @@ public class CheckingAccount implements BankAccount{
     }
 
     public boolean setInterestRate(double newRate)
-    {   
-        newRate = Verification.verifyDoubleNonNaN(newRate);
+    {
         if(newRate <= interestRateMax && newRate >=0)
         {
             BigDecimal newInterestRate = new BigDecimal(newRate);
@@ -268,6 +256,23 @@ public class CheckingAccount implements BankAccount{
 
         //multiplying a value is equal to dividing by the reciprocal
         balance = balance.add(new BigDecimal(balance.doubleValue() / (1/interestRate.doubleValue())));
-        return balance.doubleValue();
+        try{
+            if(!verifyDoubleValue(balance.doubleValue())){
+                throw new Exception();
+            }
+        } catch(Exception e){
+
+        }
+        return(balance.doubleValue());
+    }
+
+    public boolean verifyDoubleValue(double db){
+        try{
+            Double.isNaN(db);
+            Double.isFinite(db);
+        } catch(Exception e){
+            return false;
+        }
+        return true;
     }
 }
