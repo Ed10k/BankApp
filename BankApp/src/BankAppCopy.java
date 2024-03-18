@@ -24,8 +24,7 @@ public class BankAppCopy {
     private Scanner scanner = new Scanner(System.in);
 
     @SuppressWarnings("null")
-    public boolean option(int choice, boolean validated) {
-
+    public boolean option(int choice, boolean validated){
         boolean valid = false;
         String username = null;
         String password = null;
@@ -33,110 +32,104 @@ public class BankAppCopy {
         @SuppressWarnings("unused")
         List<BankAccount> accounts;
         BankAccount currentAccount = null;
-        String input = "";
-        
 
+        
+        
+        
         switch (choice) {
-            
-            // 1st level switch 
             case 1:
                 System.out.println("Please enter your username");
-                username = scanner.nextLine();
+                username = Verification.normalizeString(scanner.nextLine());
                 System.out.println("Please enter your password:");
-                password = scanner.nextLine();
-                if (users.containsKey(username)) {
+                password = Verification.normalizeString(scanner.nextLine());
+                System.out.println(password);
+                if (users.containsKey(username)){
                     user = users.get(username);
-                    if(Verification.verifyPassword(user)){
+                    System.out.println(user.getPassword());
+                    if (password.equals(user.getPassword())){
                         System.out.println("Successful log in!");
+                        user = users.get(username);
                         valid = true;
-                        break;
                     } else {
                         System.out.println("The password or username you entered is incorrect, please try again.");
-                        break;
                     }
-
                 } else {
                     System.out.println("No user with that username exists");
-                    break;
                 }
+                
+                break;
 
-
-            // 1st level switch 
             case 2:
                 System.out.println("Thank you for signing up with us!\n");
-                System.out.println("Please enter a desired username\n");
-                username = scanner.nextLine();
-                while (users.containsKey(username)) {
-                    System.out.println("Sorry, that username is taken. Pick a different username:\n ");
-                    username = scanner.nextLine();
+                System.out.println("Please enter a desired username");
+                username = Verification.normalizeString(scanner.nextLine());
+                while (users.containsKey(username)){
+                    System.out.println("Sorry, that username is taken. Pick a different username:");
+                    username = Verification.normalizeString(scanner.nextLine());
                 }
-                System.out.println("What is your password?\n");
-                password = scanner.nextLine();
-                System.out.println("Please enter your first name: \n");
-                String firstname = scanner.nextLine();
+                System.out.println("What is your password?");
+                password = Verification.normalizeString(scanner.nextLine());
+                System.out.println(password);
+                System.out.println("Please enter your first name: ");
+                String firstname = Verification.normalizeString(scanner.nextLine());
                 System.out.println("Please enter your last name");
-                String lastname = scanner.nextLine();
+                String lastname = Verification.normalizeString(scanner.nextLine());
                 System.out.println("Please enter your age");
-                input = scanner.nextLine();
-                int age = Verification.loopForInteger(input);
-
+                int age = scanner.nextInt(); scanner.nextLine(); // To consume the remaining newline
+                
                 BankUser newUser = new BankUser(firstname, lastname, age, username, password);
                 users.put(username, newUser);
                 valid = true;
+              
                 break;
                 
 
-            // 1st level switch 
             case 3:
-                if (!validated) {
-                    System.out.println("Unfortunately, before you can open an account with us, you must either register or log in.");
+                if (!validated){
+                    System.out.println("Unfortunately, before you can open an account with us you must eihter register or log in");
                     break;
                 }
                 System.out.println("Would you like to add a savings or checking account? (1 for checking, 2 for savings)");
-                input = scanner.nextLine();
-                // loop until input can be parsed into an integer
-                int account_preference = Verification.loopForInteger(input);
+                int account_preference = scanner.nextInt();
                 String accountHolderName = user.getFullName();
                 String accountType;
                 String accountName;
                 
-                // Nested switch 
+                
                 switch (account_preference) {
                     
                     case 1:
                         System.out.println("What would you like to name this account?");
-                        accountName = scanner.nextLine();
+                        accountName = Verification.normalizeString(scanner.nextLine());
                         accountType = "Checking";
                         CheckingAccount checking = new CheckingAccount(accountHolderName, accountType, accountName);
-                        
                         System.out.println("How much money would you like to deposit?");
-                        input = scanner.nextLine();
-                        double money = Verification.loopForDollarAmount(input);
+                        double money = Verification.loopForDollarAmount(scanner.nextLine());
                         checking.deposit(money);
                         user.addAccount(checking);
                         System.out.println("Thank you for choosing to open an account with us\n");
                         break;
 
+                        
+                        
                     case 2: 
                         System.out.println("What would you like to name this account?");
-                        accountName = scanner.nextLine();
+                        accountName = Verification.normalizeString(scanner.nextLine());
                         accountType = "Savings";
                         SavingAccount savings = new SavingAccount(accountHolderName, accountType, accountName);
                         System.out.println("How much money would you like to deposit?");
-                        input = scanner.nextLine();
-                        money = Verification.loopForDollarAmount(input);
+                        money = scanner.nextDouble();
                         savings.deposit(money);
                         user.addAccount(savings);
                         System.out.println("Thank you for choosing to open an account with us\n");
                         break;
                 
                     default:
-                        System.out.println("Invalid choice");
+                    System.out.println("Invalid choice");
                         break;
+                        
+        
                 }
-
-
-            // 1st level switch 
             case 4:
                 System.out.println("What account would you like to access?");
                 for (BankAccount account: user.getAccounts()){
@@ -162,48 +155,191 @@ public class BankAppCopy {
                             break;
                         }
                     }
+
                 }
                 break;
-                
 
-            // 1st level switch 
+
             case 5:
+                
                 System.out.println("Would you like to deposit or withdraw? (1 for deposit, 2 for withdraw)");
-                input = scanner.nextLine();
-                int userIntInput =  Verification.loopForInteger(input);
+                int userIntInput =  scanner.nextInt();
                 Double amount;
-
-                // Nested switch 
                 switch (userIntInput) {
                     case 1:
-                        System.out.println("How much would you like to deposit? ");
-                        input = scanner.nextLine();
-                        amount = Verification.loopForDollarAmount(input);
-                        if(currentAccount.deposit(amount)){
-                            System.out.println(amount + " has been successfully deposited into account: " + currentAccount.getAccountName());
-                        } else {
-                            System.out.println(amount + " has not been successfully deposited into account: " + currentAccount.getAccountName());
-                        }
-                        break;
+                    System.out.println("How much would you like to deposit? ");
+                    amount = scanner.nextDouble();
+                    if(currentAccount.deposit(amount)){
+                        System.out.println(amount + " has been successfully deposited into account: " + currentAccount.getAccountName());
+                    }
+                    else{
+                        System.out.println(amount + " has not been successfully deposited into account: " + currentAccount.getAccountName());
 
+                    }
+                    break;
                     case 2:
-                        System.out.println("How much would you like to withdraw? ");
-                        input = scanner.nextLine();
-                        amount = Verification.loopForDollarAmount(input);
-                        if(currentAccount.withdraw(amount)) {
-                            System.out.println(amount + " has been successfully deposited into account: " + currentAccount.getAccountName());
-                        } else {
-                            System.out.println(amount + " has not been successfully deposited into account: " + currentAccount.getAccountName());
-                        }
-                        break;
+                    System.out.println("How much would you like to withdraw? ");
+                    amount = scanner.nextDouble();
+                    if(currentAccount.withdraw(amount)){
+                        System.out.println(amount + " has been successfully deposited into account: " + currentAccount.getAccountName());
+                    }
+                    else{
+                        System.out.println(amount + " has not been successfully deposited into account: " + currentAccount.getAccountName());
+
+                    }
+                    break;
                     default:
                         System.out.println("Invalid choice");
                         break;
                 }
-            case 6: 
-                System.out.println("Thank you for your patronage, logging out.");
+            case 6:
+            if (!validated) {
+                System.out.println("You need to be logged in to close an account.");
                 break;
-            // 1st level switch 
+            }
+            System.out.println("Please enter the name of the account you wish to close:");
+            String accountToClose = scanner.nextLine();
+            boolean found = user.getAccounts().removeIf(account -> account.getAccountName().equals(accountToClose));
+            if (found) {
+                System.out.println("Account closed successfully.");
+            } else {
+                System.out.println("Account not found.");
+            }
+            break;
+            case 7:
+                if (!validated) {
+                    System.out.println("You need to be logged in to view account balances.");
+                    break;
+                }
+                System.out.println("Your account balances are:");
+                user.getAccounts().forEach(account -> System.out.println(account.getAccountName() + ": " + account.checkBalance()));
+                break;
+
+            case 8:
+            if (!validated) {
+                System.out.println("You must log in to transfer funds.");
+                break;
+            }
+            System.out.println("Enter the source account name:");
+            String sourceAccountName = scanner.nextLine();
+            System.out.println("Enter the destination account name:");
+            String destinationAccountName = scanner.nextLine();
+            System.out.println("Enter the amount to transfer:");
+            double transferAmount = scanner.nextDouble();
+            // Find accounts
+            BankAccount sourceAccount = user.getAccounts().stream()
+                                                .filter(account -> account.getAccountName().equals(sourceAccountName))
+                                                .findFirst().orElse(null);
+            BankAccount destinationAccount = user.getAccounts().stream()
+                                                    .filter(account -> account.getAccountName().equals(destinationAccountName))
+                                                    .findFirst().orElse(null);
+            // Perform transfer
+            if (sourceAccount != null && destinationAccount != null && sourceAccount.withdraw(transferAmount)) {
+                destinationAccount.deposit(transferAmount);
+                System.out.println("Transfer successful.");
+            } else {
+                System.out.println("Transfer failed.");
+            }
+            break;
+
+
+            case 9:
+            if (!validated) {
+                System.out.println("You need to be logged in to update your information.");
+                break;
+            }
+            System.out.println("What information would you like to update? (1 for password, 2 for name)");
+            int updateChoice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+            switch (updateChoice) {
+                case 1:
+                    System.out.println("Enter your new password:");
+                    String newPassword = scanner.nextLine();
+                    user.setPassword(newPassword);
+                    System.out.println("Password updated successfully.");
+                    break;
+                case 2:
+                    System.out.println("Enter your new first name:");
+                    String newFirstName = scanner.nextLine();
+                    System.out.println("Enter your new last name:");
+                    String newLastName = scanner.nextLine();
+                    user.setFirstName(newFirstName);
+                    user.setLastName(newLastName);
+                    System.out.println("Name updated successfully.");
+                    break;
+                default:
+                    System.out.println("Invalid choice.");
+                    break;
+            }
+            break;
+
+            case 10:
+            if (!validated) {
+                System.out.println("You must log in to apply interest to an account.");
+                break;
+            }
+            System.out.println("Select the account to apply interest:");
+            String interestAccountName = scanner.nextLine();
+            BankAccount interestAccount = user.getAccounts().stream()
+                                               .filter(account -> account.getAccountName().equals(interestAccountName))
+                                               .findFirst().orElse(null);
+            if (interestAccount != null) {
+                double interestGained = interestAccount.calcAmountGainedWithInterest();
+                interestAccount.deposit(interestGained);
+                System.out.println("Interest applied. Amount gained: " + interestGained + ". New balance: " + interestAccount.checkBalance());
+            } else {
+                System.out.println("Account not found.");
+            }
+            break;
+
+            case 11:
+            if (!validated) {
+                System.out.println("Please log in to update the interest rate of an account.");
+                break;
+            }
+            System.out.println("Which account's interest rate would you like to update?");
+            String rateAccountName = scanner.nextLine();
+            BankAccount rateAccount = user.getAccounts().stream()
+                                           .filter(account -> account.getAccountName().equals(rateAccountName))
+                                           .findFirst().orElse(null);
+            if (rateAccount != null) {
+                System.out.println("Current interest rate: " + rateAccount.getInterestRate() + ". Enter the new interest rate:");
+                double newRate = scanner.nextDouble();
+                if (rateAccount.setInterestRate(newRate)) {
+                    System.out.println("Interest rate updated to " + newRate + ".");
+                } else {
+                    System.out.println("Failed to update interest rate. Ensure the new rate is within the allowed range.");
+                }
+            } else {
+                System.out.println("Account not found.");
+            }
+            break;
+        
+        
+            case 12:
+            if (!validated) {
+                System.out.println("You must log in to view account details.");
+                break;
+            }
+            System.out.println("Enter the name of the account you wish to view details for:");
+            String detailAccountName = scanner.nextLine();
+            BankAccount detailAccount = user.getAccounts().stream()
+                                             .filter(account -> account.getAccountName().equals(detailAccountName))
+                                             .findFirst().orElse(null);
+            if (detailAccount != null) {
+                System.out.println("Account Holder: " + detailAccount.getAccountHolder());
+                System.out.println("Account Number: " + detailAccount.getAccountNumber());
+                System.out.println("Routing Number: " + detailAccount.getRoutingNumber());
+                System.out.println("Account Type: " + detailAccount.getAccountType());
+                System.out.println("Balance: " + detailAccount.checkBalance());
+                System.out.println("Interest Rate: " + detailAccount.getInterestRate());
+            } else {
+                System.out.println("Account not found.");
+            }
+            break;
+        
+            
+        
             default:
             System.out.println("Invalid choice");
                 break;
@@ -213,17 +349,50 @@ public class BankAppCopy {
     }
 
 
-    public void menu(){
+    public void menu() {
         boolean isOn = true;
-        System.out.println("Hello, welcome to the Banking App!\n What action would you like to perform?");
-        while (isOn){
-            System.out.println("Options:\n 1: Log in\n 2: Create profile\n 3: Add new bank account\n" +
-            "4: Check account balance\n 5: Make a transaction 6: Log out");
+        boolean validated = false;
+        int userChoice;
+        System.out.println("Hello, welcome to the Banking App\nWhat action would you like to perform?");
+    
+        while (isOn) {
+            System.out.println("\nPlease select an option:");
+            System.out.println("1 - Log in");
+            System.out.println("2 - Sign up");
+            System.out.println("3 - Open a new account");
+            System.out.println("4 - Access an existing account");
+            System.out.println("5 - Deposit/Withdraw");
+            System.out.println("6 - Close an account");
+            System.out.println("7 - View account balances");
+            System.out.println("8 - Transfer funds between accounts");
+            System.out.println("9 - Update personal information");
+            System.out.println("10 - Apply interest to an account");
+            System.out.println("11 - Update the interest rate of an account");
+            System.out.println("12 - View account details");
+            System.out.println("0 - Exit");
+            
+            userChoice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline left-over
+    
+            if (userChoice == 0) {
+                System.out.println("Thank you for using the Banking App. Goodbye!");
+                isOn = false;
+            } else {
+                // This assumes that logging in (option 1) correctly sets 'validated' to true upon successful login.
+                validated = option(userChoice, validated);
+            }
         }
     }
+    
 
 
     public static void main(String[] args) throws Exception {
+        //Instance of the BankApp
+        BankApp bank = new BankApp();
+
+        bank.menu();
+
     
+        
     }
 }
