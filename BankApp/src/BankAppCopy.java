@@ -219,7 +219,7 @@ public class BankAppCopy {
                 }
                 System.out.println("Please enter the name of the account you wish to close: ");
                 String accountToClose = scanner.nextLine();
-                boolean found = user.getAccounts().removeIf(account -> account.getAccountName().equals(accountToClose));
+                boolean found = currentUser.getAccounts().removeIf(account -> account.getAccountName().equals(accountToClose));
                 if (found) {
                     System.out.println("Account closed successfully.");
                 } else {
@@ -227,12 +227,12 @@ public class BankAppCopy {
                 }
                 break;
             case 7:
-                if (!validated) {
+                if (currentUser == null) {
                     System.out.println("You need to be logged in to view account balances.");
                     break;
                 }
                 System.out.println("Your account balances are:");
-                user.getAccounts().forEach(account -> System.out.println(account.getAccountName() + ": " + account.checkBalance()));
+                currentUser.getAccounts().forEach(account -> System.out.println(account.getAccountName() + ": " + account.checkBalance()));
                 break;
 
             case 8:
