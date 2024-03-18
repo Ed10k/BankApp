@@ -11,6 +11,7 @@ public class BankUser {
     private String lastName;
     private int age;
     private List<BankAccount> accounts;
+    private String password;
 
     public BankUser(String firstName, String lastName, int age) {
         this.firstName = firstName;
@@ -45,6 +46,15 @@ public class BankUser {
     
     public int getAge() {
         return age;
+    }
+
+    public void setPassword(String password){
+        this.password = password;
+        
+    }
+    
+    public String getPassword(){
+        return password;
     }
 
     public List<BankAccount> getAccounts() {
