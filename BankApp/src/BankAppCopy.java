@@ -23,24 +23,26 @@ public class BankAppCopy {
 
     private Scanner scanner = new Scanner(System.in);
 
+    private BankUser currentUser = null;
+
+    private BankAccount currentAccount = null;
+
     @SuppressWarnings("null")
-    public boolean option(int choice, boolean validated){
+    public boolean option(int choice, boolean validate) throws NumberFormatException {
         boolean valid = false;
         String username = null;
         String password = null;
         BankUser user = null;
         @SuppressWarnings("unused")
         List<BankAccount> accounts;
-        BankAccount currentAccount = null;
+        boolean validated = validate;
 
-        
-        
-        
+
         switch (choice) {
             case 1:
-                System.out.println("Please enter your username");
+                System.out.println("Please enter your username: ");
                 username = Verification.normalizeString(scanner.nextLine());
-                System.out.println("Please enter your password:");
+                System.out.println("Please enter your password: ");
                 password = Verification.normalizeString(scanner.nextLine());
                 System.out.println(password);
                 if (users.containsKey(username)){
@@ -49,6 +51,7 @@ public class BankAppCopy {
                     if (password.equals(user.getPassword())){
                         System.out.println("Successful log in!");
                         user = users.get(username);
+                        currentUser = user;
                         valid = true;
                     } else {
                         System.out.println("The password or username you entered is incorrect, please try again.");
@@ -67,9 +70,7 @@ public class BankAppCopy {
                     System.out.println("Sorry, that username is taken. Pick a different username:");
                     username = Verification.normalizeString(scanner.nextLine());
                 }
-                System.out.println("What is your password?");
-                password = Verification.normalizeString(scanner.nextLine());
-                System.out.println(password);
+        
                 System.out.println("Please enter your first name: ");
                 String firstname = Verification.normalizeString(scanner.nextLine());
                 System.out.println("Please enter your last name");
@@ -78,7 +79,11 @@ public class BankAppCopy {
                 int age = scanner.nextInt(); scanner.nextLine(); // To consume the remaining newline
                 
                 BankUser newUser = new BankUser(firstname, lastname, age, username, password);
+                System.out.println("What is your password?");
+                password = Verification.normalizeString(scanner.nextLine());
+                newUser.setPassword(password);
                 users.put(username, newUser);
+                currentUser = newUser;
                 valid = true;
               
                 break;
@@ -86,12 +91,13 @@ public class BankAppCopy {
 
             case 3:
                 if (!validated){
-                    System.out.println("Unfortunately, before you can open an account with us you must eihter register or log in");
+                    System.out.println("Unfortunately, before you can open an account with us you must either register or log in");
                     break;
                 }
                 System.out.println("Would you like to add a savings or checking account? (1 for checking, 2 for savings)");
                 int account_preference = scanner.nextInt();
-                String accountHolderName = user.getFullName();
+                scanner.nextLine();
+                String accountHolderName = currentUser.getFullName();
                 String accountType;
                 String accountName;
                 
@@ -104,9 +110,9 @@ public class BankAppCopy {
                         accountType = "Checking";
                         CheckingAccount checking = new CheckingAccount(accountHolderName, accountType, accountName);
                         System.out.println("How much money would you like to deposit?");
-                        double money = Verification.loopForDollarAmount(scanner.nextLine());
+                        double money = scanner.nextDouble();
                         checking.deposit(money);
-                        user.addAccount(checking);
+                        currentUser.addAccount(checking);
                         System.out.println("Thank you for choosing to open an account with us\n");
                         break;
 
@@ -119,8 +125,9 @@ public class BankAppCopy {
                         SavingAccount savings = new SavingAccount(accountHolderName, accountType, accountName);
                         System.out.println("How much money would you like to deposit?");
                         money = scanner.nextDouble();
+                        scanner.nextLine();
                         savings.deposit(money);
-                        user.addAccount(savings);
+                        currentUser.addAccount(savings);
                         System.out.println("Thank you for choosing to open an account with us\n");
                         break;
                 
@@ -130,21 +137,21 @@ public class BankAppCopy {
                         
         
                 }
+                break;
             case 4:
-                
-                if(!valid) {
-                    System.out.println("No account has been opened yet. Please open an account first.");
+                ///////////////////////////////
+                if(currentUser == null) {
+                    System.out.println("You have not signed up yet. Please sign up first.");
                     break;
                 }
+                ///////////////////////////////
+
                 System.out.println("What account would you like to access?");
-                for (BankAccount account: user.getAccounts()){
-                    System.out.println(" \n" + account);
-                }
-                System.out.println("If you know the account number, type below otherwise you can select by typing the account name");
+                System.out.println("If you know the account number, type below, otherwise you can select by typing the account name:");
                 String userInput = scanner.nextLine();
                 try{
                     Integer accountNumber = Integer.parseInt(userInput);
-                    for(BankAccount account: user.getAccounts()){
+                    for(BankAccount account: currentUser.getAccounts()){
                         if (accountNumber.equals(account.getAccountNumber())){
                             currentAccount = account;
                             option(5, validated);
@@ -153,7 +160,7 @@ public class BankAppCopy {
                     }
 
                 } catch(NumberFormatException e){
-                    for (BankAccount account:user.getAccounts()){
+                    for (BankAccount account: currentUser.getAccounts()){
                         if(userInput.equals(account.getAccountName())){
                             currentAccount = account;
                             option(5, validated);
@@ -166,6 +173,12 @@ public class BankAppCopy {
 
 
             case 5:
+                ///////////////////////////////
+                if(currentUser == null) {
+                    System.out.println("You have not signed up yet. Please sign up first.");
+                    break;
+                }
+                ///////////////////////////////
                 
                 System.out.println("Would you like to deposit or withdraw? (1 for deposit, 2 for withdraw)");
                 int userIntInput =  scanner.nextInt();
@@ -197,20 +210,22 @@ public class BankAppCopy {
                         System.out.println("Invalid choice");
                         break;
                 }
-            case 6:
-            if (!validated) {
-                System.out.println("You need to be logged in to close an account.");
                 break;
-            }
-            System.out.println("Please enter the name of the account you wish to close:");
-            String accountToClose = scanner.nextLine();
-            boolean found = user.getAccounts().removeIf(account -> account.getAccountName().equals(accountToClose));
-            if (found) {
-                System.out.println("Account closed successfully.");
-            } else {
-                System.out.println("Account not found.");
-            }
-            break;
+            case 6:
+
+                if (currentUser == null) {
+                    System.out.println("You need to be logged in to close an account.");
+                    break;
+                }
+                System.out.println("Please enter the name of the account you wish to close: ");
+                String accountToClose = scanner.nextLine();
+                boolean found = user.getAccounts().removeIf(account -> account.getAccountName().equals(accountToClose));
+                if (found) {
+                    System.out.println("Account closed successfully.");
+                } else {
+                    System.out.println("Account not found.");
+                }
+                break;
             case 7:
                 if (!validated) {
                     System.out.println("You need to be logged in to view account balances.");
@@ -221,130 +236,129 @@ public class BankAppCopy {
                 break;
 
             case 8:
-            if (!validated) {
-                System.out.println("You must log in to transfer funds.");
-                break;
-            }
-            System.out.println("Enter the source account name:");
-            String sourceAccountName = scanner.nextLine();
-            System.out.println("Enter the destination account name:");
-            String destinationAccountName = scanner.nextLine();
-            System.out.println("Enter the amount to transfer:");
-            double transferAmount = scanner.nextDouble();
-            // Find accounts
-            BankAccount sourceAccount = user.getAccounts().stream()
-                                                .filter(account -> account.getAccountName().equals(sourceAccountName))
-                                                .findFirst().orElse(null);
-            BankAccount destinationAccount = user.getAccounts().stream()
-                                                    .filter(account -> account.getAccountName().equals(destinationAccountName))
+                if (!validated) {
+                    System.out.println("You must log in to transfer funds.");
+                    break;
+                }
+                System.out.println("Enter the source account name:");
+                String sourceAccountName = scanner.nextLine();
+                System.out.println("Enter the destination account name:");
+                String destinationAccountName = scanner.nextLine();
+                System.out.println("Enter the amount to transfer:");
+                double transferAmount = scanner.nextDouble();
+                // Find accounts
+                BankAccount sourceAccount = user.getAccounts().stream()
+                                                    .filter(account -> account.getAccountName().equals(sourceAccountName))
                                                     .findFirst().orElse(null);
-            // Perform transfer
-            if (sourceAccount != null && destinationAccount != null && sourceAccount.withdraw(transferAmount)) {
-                destinationAccount.deposit(transferAmount);
-                System.out.println("Transfer successful.");
-            } else {
-                System.out.println("Transfer failed.");
-            }
-            break;
+                BankAccount destinationAccount = user.getAccounts().stream()
+                                                        .filter(account -> account.getAccountName().equals(destinationAccountName))
+                                                        .findFirst().orElse(null);
+                // Perform transfer
+                if (sourceAccount != null && destinationAccount != null && sourceAccount.withdraw(transferAmount)) {
+                    destinationAccount.deposit(transferAmount);
+                    System.out.println("Transfer successful.");
+                } else {
+                    System.out.println("Transfer failed.");
+                }
+                break;
 
 
             case 9:
-            if (!validated) {
-                System.out.println("You need to be logged in to update your information.");
+                if (!validated) {
+                    System.out.println("You need to be logged in to update your information.");
+                    break;
+                }
+                System.out.println("What information would you like to update? (1 for password, 2 for name)");
+                int updateChoice = scanner.nextInt();
+                scanner.nextLine(); // Consume newline
+                switch (updateChoice) {
+                    case 1:
+                        System.out.println("Enter your new password:");
+                        String newPassword = scanner.nextLine();
+                        user.setPassword(newPassword);
+                        System.out.println("Password updated successfully.");
+                        break;
+                    case 2:
+                        System.out.println("Enter your new first name:");
+                        String newFirstName = scanner.nextLine();
+                        System.out.println("Enter your new last name:");
+                        String newLastName = scanner.nextLine();
+                        user.setFirstName(newFirstName);
+                        user.setLastName(newLastName);
+                        System.out.println("Name updated successfully.");
+                        break;
+                    default:
+                        System.out.println("Invalid choice.");
+                        break;
+                }
                 break;
-            }
-            System.out.println("What information would you like to update? (1 for password, 2 for name)");
-            int updateChoice = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
-            switch (updateChoice) {
-                case 1:
-                    System.out.println("Enter your new password:");
-                    String newPassword = scanner.nextLine();
-                    user.setPassword(newPassword);
-                    System.out.println("Password updated successfully.");
-                    break;
-                case 2:
-                    System.out.println("Enter your new first name:");
-                    String newFirstName = scanner.nextLine();
-                    System.out.println("Enter your new last name:");
-                    String newLastName = scanner.nextLine();
-                    user.setFirstName(newFirstName);
-                    user.setLastName(newLastName);
-                    System.out.println("Name updated successfully.");
-                    break;
-                default:
-                    System.out.println("Invalid choice.");
-                    break;
-            }
-            break;
 
             case 10:
-            if (!validated) {
-                System.out.println("You must log in to apply interest to an account.");
+                if (!validated) {
+                    System.out.println("You must log in to apply interest to an account.");
+                    break;
+                }
+                System.out.println("Select the account to apply interest:");
+                String interestAccountName = scanner.nextLine();
+                BankAccount interestAccount = user.getAccounts().stream()
+                                                .filter(account -> account.getAccountName().equals(interestAccountName))
+                                                .findFirst().orElse(null);
+                if (interestAccount != null) {
+                    double interestGained = interestAccount.calcAmountGainedWithInterest();
+                    interestAccount.deposit(interestGained);
+                    System.out.println("Interest applied. Amount gained: " + interestGained + ". New balance: " + interestAccount.checkBalance());
+                } else {
+                    System.out.println("Account not found.");
+                }
                 break;
-            }
-            System.out.println("Select the account to apply interest:");
-            String interestAccountName = scanner.nextLine();
-            BankAccount interestAccount = user.getAccounts().stream()
-                                               .filter(account -> account.getAccountName().equals(interestAccountName))
-                                               .findFirst().orElse(null);
-            if (interestAccount != null) {
-                double interestGained = interestAccount.calcAmountGainedWithInterest();
-                interestAccount.deposit(interestGained);
-                System.out.println("Interest applied. Amount gained: " + interestGained + ". New balance: " + interestAccount.checkBalance());
-            } else {
-                System.out.println("Account not found.");
-            }
-            break;
 
             case 11:
-            if (!validated) {
-                System.out.println("Please log in to update the interest rate of an account.");
-                break;
-            }
-            System.out.println("Which account's interest rate would you like to update?");
-            String rateAccountName = scanner.nextLine();
-            BankAccount rateAccount = user.getAccounts().stream()
-                                           .filter(account -> account.getAccountName().equals(rateAccountName))
-                                           .findFirst().orElse(null);
-            if (rateAccount != null) {
-                System.out.println("Current interest rate: " + rateAccount.getInterestRate() + ". Enter the new interest rate:");
-                double newRate = scanner.nextDouble();
-                if (rateAccount.setInterestRate(newRate)) {
-                    System.out.println("Interest rate updated to " + newRate + ".");
-                } else {
-                    System.out.println("Failed to update interest rate. Ensure the new rate is within the allowed range.");
+                if (!validated) {
+                    System.out.println("Please log in to update the interest rate of an account.");
+                    break;
                 }
-            } else {
-                System.out.println("Account not found.");
-            }
-            break;
+                System.out.println("Which account's interest rate would you like to update?");
+                String rateAccountName = scanner.nextLine();
+                BankAccount rateAccount = user.getAccounts().stream()
+                                            .filter(account -> account.getAccountName().equals(rateAccountName))
+                                            .findFirst().orElse(null);
+                if (rateAccount != null) {
+                    System.out.println("Current interest rate: " + rateAccount.getInterestRate() + ". Enter the new interest rate:");
+                    double newRate = scanner.nextDouble();
+                    if (rateAccount.setInterestRate(newRate)) {
+                        System.out.println("Interest rate updated to " + newRate + ".");
+                    } else {
+                        System.out.println("Failed to update interest rate. Ensure the new rate is within the allowed range.");
+                    }
+                } else {
+                    System.out.println("Account not found.");
+                }
+                break;
         
         
             case 12:
-            if (!validated) {
-                System.out.println("You must log in to view account details.");
+                if (!validated) {
+                    System.out.println("You must log in to view account details.");
+                    break;
+                }
+                System.out.println("Enter the name of the account you wish to view details for:");
+                String detailAccountName = scanner.nextLine();
+                BankAccount detailAccount = user.getAccounts().stream()
+                                                .filter(account -> account.getAccountName().equals(detailAccountName))
+                                                .findFirst().orElse(null);
+                if (detailAccount != null) {
+                    System.out.println("Account Holder: " + detailAccount.getAccountHolder());
+                    System.out.println("Account Number: " + detailAccount.getAccountNumber());
+                    System.out.println("Routing Number: " + detailAccount.getRoutingNumber());
+                    System.out.println("Account Type: " + detailAccount.getAccountType());
+                    System.out.println("Balance: " + detailAccount.checkBalance());
+                    System.out.println("Interest Rate: " + detailAccount.getInterestRate());
+                } else {
+                    System.out.println("Account not found.");
+                }
                 break;
-            }
-            System.out.println("Enter the name of the account you wish to view details for:");
-            String detailAccountName = scanner.nextLine();
-            BankAccount detailAccount = user.getAccounts().stream()
-                                             .filter(account -> account.getAccountName().equals(detailAccountName))
-                                             .findFirst().orElse(null);
-            if (detailAccount != null) {
-                System.out.println("Account Holder: " + detailAccount.getAccountHolder());
-                System.out.println("Account Number: " + detailAccount.getAccountNumber());
-                System.out.println("Routing Number: " + detailAccount.getRoutingNumber());
-                System.out.println("Account Type: " + detailAccount.getAccountType());
-                System.out.println("Balance: " + detailAccount.checkBalance());
-                System.out.println("Interest Rate: " + detailAccount.getInterestRate());
-            } else {
-                System.out.println("Account not found.");
-            }
-            break;
-        
             
-        
+            
             default:
             System.out.println("Invalid choice");
                 break;
@@ -394,11 +408,7 @@ public class BankAppCopy {
 
     public static void main(String[] args) throws Exception {
         //Instance of the BankApp
-        BankApp bank = new BankApp();
-
+        BankAppCopy bank = new BankAppCopy();
         bank.menu();
-
-    
-        
     }
 }

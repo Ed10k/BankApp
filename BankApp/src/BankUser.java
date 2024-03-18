@@ -28,7 +28,6 @@ public class BankUser {
     }
 
     public void setPassword(String password){
-        Verification.verifyPassword(this);
         Verification.normalizeString(password);
         this.password = password;
     }
