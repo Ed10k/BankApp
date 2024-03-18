@@ -14,6 +14,7 @@ public class BankUser {
         this.firstName = Verification.normalizeString(firstName);
         this.lastName = Verification.normalizeString(lastName);
         this.username = Verification.normalizeString(username);
+        setPassword(password);
         this.age = age;
         this.accounts = new ArrayList<>();
     }
