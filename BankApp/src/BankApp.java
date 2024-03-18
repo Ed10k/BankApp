@@ -5,7 +5,8 @@ import java.util.List;
 
 /**
  * @author Joseph Edozie
- * @author Ian Gowland
+ * 
+ * Edited by Ian Gowland
  */
 
 public class BankApp {
