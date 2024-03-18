@@ -3,12 +3,8 @@ import java.util.HashMap;
 import java.util.Scanner;
 import java.util.List;
 
-/**
- * @author Joseph Edozie
- * @author Ian Gowland
- */
 
-public class BankApp {
+public class BankAppCopy {
     /*
      * Rules
      * DCL00-J Prevent class initiialization cycles
@@ -48,10 +44,10 @@ public class BankApp {
                 username = Verification.normalizeString(scanner.nextLine());
                 System.out.println("Please enter your password: ");
                 password = Verification.normalizeString(scanner.nextLine());
-               
+                System.out.println(password);
                 if (users.containsKey(username)){
                     user = users.get(username);
-                    
+                    System.out.println(user.getPassword());
                     if (password.equals(user.getPassword())){
                         System.out.println("Successful log in!");
                         user = users.get(username);
@@ -83,7 +79,7 @@ public class BankApp {
                 int age = scanner.nextInt(); scanner.nextLine(); // To consume the remaining newline
                 
                 BankUser newUser = new BankUser(firstname, lastname, age, username, password);
-                System.out.println("Please enter a password: ");
+                System.out.println("Please enter your password: ");
                 password = Verification.normalizeString(scanner.nextLine());
                 newUser.setPassword(password);
                 users.put(username, newUser);
@@ -136,7 +132,7 @@ public class BankApp {
                         break;
                 
                     default:
-                    System.out.println("Invalid choice.");
+                    System.out.println("Invalid choice");
                         break;
                         
         
@@ -211,7 +207,7 @@ public class BankApp {
                     }
                     break;
                     default:
-                        System.out.println("Invalid choice.");
+                        System.out.println("Invalid choice");
                         break;
                 }
                 break;
@@ -412,7 +408,7 @@ public class BankApp {
 
     public static void main(String[] args) throws Exception {
         //Instance of the BankApp
-        BankApp bank = new BankApp();
+        BankAppCopy bank = new BankAppCopy();
         bank.menu();
     }
 }

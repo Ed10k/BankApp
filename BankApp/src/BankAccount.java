@@ -1,4 +1,4 @@
-/*
+/* @author Matthew Fonner
  * This is the BankAccount interface that will be implemented in a checking account and savings account
  */
 public interface BankAccount {
@@ -9,7 +9,7 @@ public interface BankAccount {
      * precondition: an account doesn't exist
      * postcondition: an account is ready to use
      */
-    public boolean openAccount(String accountHolderName);
+    public boolean openAccount(String accountHolderName, String accountType, String accountName);
 
      /*
      * method that deactivates account when user wishes to close
@@ -78,6 +78,36 @@ public interface BankAccount {
      * @return - double: the interest rate
      */
     public double getInterestRate();
+    
+    /*
+     * method that sets the current name of the account
+     * @param - String accountName: the new account name to be set
+     * @return - void
+     */
+    public void setAccountName(String accountName);
+
+    /*
+     * method that returns the current name of the bank account.
+     * 
+     * @param - none:
+     * @return - String: the account name
+     */
+    public String getAccountName();
+
+    /*
+     * method that sets the current type of the account
+     * @param - String accountType: the new account type to be set
+     * @return - void
+     */
+    public void setAccountType(String accountType);
+
+    /*
+     * method that returns the current type of the bank account.
+     * 
+     * @param - none:
+     * @return - String: the account type
+     */
+    public String getAccountType();
 
     /*
      * method that sets the current interest rate. Must be in specified range dictated by type of account
