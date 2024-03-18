@@ -131,6 +131,11 @@ public class BankAppCopy {
         
                 }
             case 4:
+                
+                if(!valid) {
+                    System.out.println("No account has been opened yet. Please open an account first.");
+                    break;
+                }
                 System.out.println("What account would you like to access?");
                 for (BankAccount account: user.getAccounts()){
                     System.out.println(" \n" + account);
@@ -371,6 +376,7 @@ public class BankAppCopy {
             System.out.println("12 - View account details");
             System.out.println("0 - Exit");
             
+            System.out.print("\nPlease select an option:");
             userChoice = scanner.nextInt();
             scanner.nextLine(); // Consume newline left-over
     
