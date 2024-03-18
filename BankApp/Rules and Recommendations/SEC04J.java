@@ -2,6 +2,9 @@
 /*
  * Compliant with SEC04-J. Sensitive operations should be checked with the security manager.
  */
+
+import java.util.HashMap;
+
 public class SEC04J
 {
     private HashMap<String,String> map;
