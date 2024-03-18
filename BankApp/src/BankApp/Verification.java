@@ -1,14 +1,24 @@
 package BankApp;
 
 
+
+
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 /**
  * This class is a compilation of several rules that have been implemented and 
@@ -136,8 +146,14 @@ public class Verification {
      /**
       * This method prompts a user to enter their password until it is correct.
       * @param user - BankUser, signifying the client that needs to verify their password.
+     * @throws NoSuchPaddingException 
+     * @throws NoSuchAlgorithmException 
+     * @throws BadPaddingException 
+     * @throws IllegalBlockSizeException 
+     * @throws InvalidAlgorithmParameterException 
+     * @throws InvalidKeyException 
       */
-     public static boolean verifyPassword(BankUser user) {
+     public static boolean verifyPassword(BankUser user) throws InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException {
         Scanner scan = new Scanner(System.in);
         System.out.print("Please enter your password: ");
         String input = scan.nextLine();
