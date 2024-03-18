@@ -1,4 +1,5 @@
 # BankApp
 it 355 bank app group project
 
-All Rules and Recommendations are in the development branch
+All Individual Rules and Recommendation files are in the development branch
+Most recent app code in main branch
