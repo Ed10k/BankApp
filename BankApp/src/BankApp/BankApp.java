@@ -1,7 +1,16 @@
 package BankApp;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.util.regex.Pattern;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+
 import java.util.List;
 
 
@@ -25,7 +34,7 @@ public class BankApp {
     private Scanner scanner = new Scanner(System.in);
 
     @SuppressWarnings("null")
-    public boolean option(int choice, boolean validated){
+    public boolean option(int choice, boolean validated) throws InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeySpecException{
         boolean valid = false;
         String username = null;
         String password = null;
