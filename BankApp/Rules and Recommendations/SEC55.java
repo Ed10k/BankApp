@@ -3,7 +3,7 @@
  */
 public class SEC55
 {
-    if (accessControlContext == null) {
+      if (accessControlContext == null) {
         throw new SecurityException("Missing AccessControlContext");
       }
       AccessController.doPrivileged(
