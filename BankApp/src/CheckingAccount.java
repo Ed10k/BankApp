@@ -64,12 +64,9 @@ public class CheckingAccount implements BankAccount{
     }
 
     public final boolean openAccount(String accountHolderName, String accountType, String accountName){
-<<<<<<< HEAD
         accountHolderName = Verification.normalizeString(accountHolderName);
         accountType = Verification.normalizeString(accountType);
         accountName = Verification.normalizeString(accountName);
-=======
->>>>>>> JOEDEV
         if(accountHolderName == null) //NullPointerException is not thrown - ERR08-J
         {
             return false;
@@ -95,10 +92,7 @@ public class CheckingAccount implements BankAccount{
     }
 
     public void setAccountType(String accountType){
-<<<<<<< HEAD
         accountType = Verification.normalizeString(accountType);
-=======
->>>>>>> JOEDEV
         this.accountType = accountType;
     }
 
