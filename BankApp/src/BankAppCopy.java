@@ -207,7 +207,7 @@ public class BankAppCopy {
                     }
                     break;
                     default:
-                        System.out.println("Invalid choice.");
+                        System.out.println("Invalid choice");
                         break;
                 }
                 break;

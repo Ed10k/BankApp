@@ -37,7 +37,6 @@ public class BankUser {
     }
 
     public void setFirstName(String firstName) {
-        Verification.normalizeString(firstName);
         this.firstName = firstName;
     }
     
@@ -46,7 +45,6 @@ public class BankUser {
     }
 
     public void setLastName(String lastName) {
-        Verification.normalizeString(lastName);
         this.lastName = lastName;
     }
     
