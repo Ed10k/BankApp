@@ -83,7 +83,7 @@ public class BankApp {
                 int age = scanner.nextInt(); scanner.nextLine(); // To consume the remaining newline
                 
                 BankUser newUser = new BankUser(firstname, lastname, age, username, password);
-                System.out.println("Please enter your password: ");
+                System.out.println("Please enter a password: ");
                 password = Verification.normalizeString(scanner.nextLine());
                 newUser.setPassword(password);
                 users.put(username, newUser);
