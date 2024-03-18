@@ -4,13 +4,14 @@ import java.util.List;
 /*
      * Rules:
      * EXP01-J: Don’t Use a Null in a Case where an Object is Required
+     * DCL61-J: Declare lists with a specified data type, not just object
      */
 
 public class BankUser {
     private String firstName;
     private String lastName;
     private int age;
-    private List<BankAccount> accounts;
+    private List<BankAccount> accounts; //DCL61-J
     private String password;
 
     public BankUser(String firstName, String lastName, int age) {
